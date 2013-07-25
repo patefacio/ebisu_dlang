@@ -1,0 +1,23 @@
+#< if(_.doc != null) { >
+${blockComment(_.doc)}
+#< } >
+module ${_.qualifiedName};
+
+#< for(String i in _.publicImports) { >
+public ${D_META.importStatement(i)};
+#< } >
+#< for(String i in _.imports) { >
+${D_META.importStatement(i)};
+#< } >
+#< for(String i in _.debugImports) { >
+debug ${D_META.importStatement(i)};
+#< } >
+#< if (_.anyImports) { >
+
+#< } >
+${chomp(_.contents)}
+#< if(_.unitTest) { >
+static if(1) unittest { 
+${indentBlock(chomp(customBlock("unittest ${_.name}")))}
+}
+#< } >

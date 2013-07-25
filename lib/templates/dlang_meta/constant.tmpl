@@ -1,0 +1,16 @@
+#< if(null != _.doc) { >
+${blockComment(chomp(_.doc, true))}
+#< } >
+#< String staticTag = _.isStatic? 'static ' : ''; >
+#< if(null != _.init) { >
+#<   if(_.hasStaticThis) { >
+${staticTag}const(${_.type}) ${_.name};
+static this() {
+  cast(${_.type})${_.name} = ${indentBlock(_.init).trim()};
+}
+#<   } else { >
+${staticTag}const(${_.type}) ${_.name} = ${chomp(_.init)};
+#<   } >
+#< } else { >
+${staticTag}const(${_.type}) ${_.name};
+#< } >
