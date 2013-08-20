@@ -97,7 +97,8 @@ void main() {
         ..dependencies = [
           pubdep('pathos'),
           pubdep('ebisu')
-          ..path = '../ebisu',
+          ..gitRef = 'HEAD'
+          ..path = 'git://github.com/patefacio/ebisu',
         ]
                  )
     ..libraries = [

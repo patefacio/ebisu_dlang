@@ -6,7 +6,10 @@ description: >
 dependencies:
   pathos:  "any"
   ebisu:
-      path: ../ebisu
+      git: 
+        url: git://github.com/patefacio/ebisu
+        ref: HEAD
+
 # custom <ebisu_dlang dependencies>
 # end <ebisu_dlang dependencies>
 
