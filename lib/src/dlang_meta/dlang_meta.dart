@@ -1,7 +1,7 @@
 part of dlang_meta;
 
 /// Access for member variable - ia - inaccessible, ro - read/only, rw read/write
-class Access { 
+class Access {
   static const IA = const Access._(0);
   static const RO = const Access._(1);
   static const RW = const Access._(2);
@@ -16,16 +16,16 @@ class Access {
 
   const Access._(this.value);
 
-  String toString() { 
-    switch(this) { 
+  String toString() {
+    switch(this) {
       case IA: return "IA";
       case RO: return "RO";
       case RW: return "RW";
     }
   }
 
-  static Access fromString(String s) { 
-    switch(s) { 
+  static Access fromString(String s) {
+    switch(s) {
       case "IA": return IA;
       case "RO": return RO;
       case "RW": return RW;
@@ -36,7 +36,7 @@ class Access {
 }
 
 /// Access in the D sense
-class DAccess { 
+class DAccess {
   static const PUBLIC = const DAccess._(0);
   static const PRIVATE = const DAccess._(1);
   static const PACKAGE = const DAccess._(2);
@@ -55,8 +55,8 @@ class DAccess {
 
   const DAccess._(this.value);
 
-  String toString() { 
-    switch(this) { 
+  String toString() {
+    switch(this) {
       case PUBLIC: return "PUBLIC";
       case PRIVATE: return "PRIVATE";
       case PACKAGE: return "PACKAGE";
@@ -65,8 +65,8 @@ class DAccess {
     }
   }
 
-  static DAccess fromString(String s) { 
-    switch(s) { 
+  static DAccess fromString(String s) {
+    switch(s) {
       case "PUBLIC": return PUBLIC;
       case "PRIVATE": return PRIVATE;
       case "PACKAGE": return PACKAGE;
@@ -79,7 +79,7 @@ class DAccess {
 }
 
 /// User defined data type
-class Udt { 
+class Udt {
   static const ALIAS = const Udt._(0);
   static const ENUM = const Udt._(1);
   static const STRUCT = const Udt._(2);
@@ -96,8 +96,8 @@ class Udt {
 
   const Udt._(this.value);
 
-  String toString() { 
-    switch(this) { 
+  String toString() {
+    switch(this) {
       case ALIAS: return "ALIAS";
       case ENUM: return "ENUM";
       case STRUCT: return "STRUCT";
@@ -105,8 +105,8 @@ class Udt {
     }
   }
 
-  static Udt fromString(String s) { 
-    switch(s) { 
+  static Udt fromString(String s) {
+    switch(s) {
       case "ALIAS": return ALIAS;
       case "ENUM": return ENUM;
       case "STRUCT": return STRUCT;
@@ -117,12 +117,12 @@ class Udt {
 
 }
 
-class BasicType { 
+class BasicType {
   BasicType(
     this._name,
     this._init
   ) {
-  
+
   }
   
   String _name;
@@ -136,16 +136,16 @@ class BasicType {
 
 // end <class BasicType>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "name": EBISU_UTILS.toJson(_name),
     "init": EBISU_UTILS.toJson(_init),
     // TODO: "BasicType": super.toJson(),
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "init": EBISU_UTILS.randJson(_randomJsonGenerator, dynamic.randJson),
     };
@@ -154,11 +154,11 @@ class BasicType {
 }
 
 /// Holder for packages, apps, and the root path
-class System { 
+class System {
   System(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -196,8 +196,8 @@ class System {
 
 // end <class System>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "rootPath": EBISU_UTILS.toJson(rootPath),
@@ -208,16 +208,16 @@ class System {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "rootPath": EBISU_UTILS.randJson(_randomJsonGenerator, String),
-    "apps": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "apps":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => App.randJson()),
-    "packages": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "packages":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Package.randJson()),
     "finalized": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
     };
@@ -226,11 +226,11 @@ class System {
 }
 
 /// Meta data required for D package
-class Package { 
+class Package {
   Package(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -271,8 +271,8 @@ class Package {
 
 // end <class Package>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -282,16 +282,16 @@ class Package {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
-    "modules": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "modules":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Module.randJson()),
-    "packages": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "packages":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Package.randJson()),
     };
   }
@@ -299,11 +299,11 @@ class Package {
 }
 
 /// Meta data required for D module
-class Module extends Decls { 
+class Module extends Decls {
   Module(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -364,8 +364,8 @@ class Module extends Decls {
 
 // end <class Module>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "imports": EBISU_UTILS.toJson(imports),
@@ -375,18 +375,18 @@ class Module extends Decls {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
-    "imports": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "imports":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => EBISU_UTILS.randJson(_randomJsonGenerator, String)),
-    "publicImports": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "publicImports":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => EBISU_UTILS.randJson(_randomJsonGenerator, String)),
-    "debugImports": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "debugImports":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => EBISU_UTILS.randJson(_randomJsonGenerator, String)),
     };
   }
@@ -394,11 +394,11 @@ class Module extends Decls {
 }
 
 /// An entry in an enum
-class EnumValue { 
+class EnumValue {
   EnumValue(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -430,8 +430,8 @@ class EnumValue {
 
 // end <class EnumValue>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "name": EBISU_UTILS.toJson(_name),
     "doc": EBISU_UTILS.toJson(doc),
@@ -440,8 +440,8 @@ class EnumValue {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
@@ -452,11 +452,11 @@ class EnumValue {
 }
 
 /// A template mixin
-class TMixin { 
+class TMixin {
   TMixin(
     this.name
   ) {
-  
+
   }
   
   /// Textual name of template mixin
@@ -476,8 +476,8 @@ class TMixin {
 
 // end <class TMixin>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "tArgs": EBISU_UTILS.toJson(tArgs),
@@ -485,23 +485,23 @@ class TMixin {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
-    "tArgs": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "tArgs":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => EBISU_UTILS.randJson(_randomJsonGenerator, String)),
     };
   }
 
 }
 
-class Enum { 
+class Enum {
   Enum(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -534,8 +534,8 @@ class Enum {
 
 // end <class Enum>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -545,25 +545,25 @@ class Enum {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
-    "values": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "values":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => EnumValue.randJson()),
     };
   }
 
 }
 
-class Constant { 
+class Constant {
   Constant(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -603,8 +603,8 @@ class Constant {
 
 // end <class Constant>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -617,8 +617,8 @@ class Constant {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
@@ -632,11 +632,11 @@ class Constant {
 
 }
 
-class Union extends Decls { 
+class Union extends Decls {
   Union(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -670,8 +670,8 @@ class Union extends Decls {
 
 // end <class Union>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -681,14 +681,14 @@ class Union extends Decls {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
-    "members": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "members":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Member.randJson()),
     };
   }
@@ -696,30 +696,30 @@ class Union extends Decls {
 }
 
 /// TODO: add support for apps
-class App { 
+class App {
 
   // custom <class App>
   // end <class App>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     // TODO: "App": super.toJson(),
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     };
   }
 
 }
 
 /// Declaration for an alias
-class Alias { 
+class Alias {
   Alias(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -749,8 +749,8 @@ class Alias {
 
 // end <class Alias>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -760,8 +760,8 @@ class Alias {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
@@ -773,11 +773,11 @@ class Alias {
 }
 
 /// Declaration for an alias to an array
-class ArrAlias { 
+class ArrAlias {
   ArrAlias(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -815,8 +815,8 @@ class ArrAlias {
 
 // end <class ArrAlias>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -827,8 +827,8 @@ class ArrAlias {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
@@ -841,11 +841,11 @@ class ArrAlias {
 }
 
 /// Declaration for an alias to an associative array
-class AArrAlias { 
+class AArrAlias {
   AArrAlias(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -875,8 +875,8 @@ class AArrAlias {
 
 // end <class AArrAlias>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -887,8 +887,8 @@ class AArrAlias {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
@@ -900,11 +900,11 @@ class AArrAlias {
 
 }
 
-class TemplateParm { 
+class TemplateParm {
   TemplateParm(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -943,8 +943,8 @@ class TemplateParm {
 
 // end <class TemplateParm>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -955,8 +955,8 @@ class TemplateParm {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
@@ -969,11 +969,11 @@ class TemplateParm {
 }
 
 /// Defines a D template
-class Template extends Decls { 
+class Template extends Decls {
   Template(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -1000,8 +1000,8 @@ class Template extends Decls {
 
 // end <class Template>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -1011,13 +1011,13 @@ class Template extends Decls {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
-    "templateParms": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "templateParms":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => TemplateParm.randJson()),
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
     };
@@ -1026,11 +1026,11 @@ class Template extends Decls {
 }
 
 /// Container for generated code
-class CodeBlock { 
+class CodeBlock {
   CodeBlock(
     this.code
   ) {
-  
+
   }
   
   /// D langauge access for this code block
@@ -1042,16 +1042,16 @@ class CodeBlock {
 
 // end <class CodeBlock>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "code": EBISU_UTILS.toJson(code),
     // TODO: "CodeBlock": super.toJson(),
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
     "code": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     };
@@ -1060,7 +1060,7 @@ class CodeBlock {
 }
 
 /// Container for declarations
-class Decls { 
+class Decls {
   List mixins = [];
   List<Alias> aliases = [];
   List<Constant> constants = [];
@@ -1149,8 +1149,8 @@ $privateCustomBlock}
 
 // end <class Decls>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "mixins": EBISU_UTILS.toJson(mixins),
     "aliases": EBISU_UTILS.toJson(aliases),
     "constants": EBISU_UTILS.toJson(constants),
@@ -1167,34 +1167,34 @@ $privateCustomBlock}
     };
   }
 
-  static Map randJson() { 
-    return { 
-    "mixins": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+  static Map randJson() {
+    return {
+    "mixins":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => dynamic.randJson()),
-    "aliases": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "aliases":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Alias.randJson()),
-    "constants": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "constants":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Constant.randJson()),
-    "structs": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "structs":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Struct.randJson()),
-    "enums": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "enums":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Enum.randJson()),
-    "unions": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "unions":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Union.randJson()),
-    "templates": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "templates":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Template.randJson()),
-    "codeBlocks": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "codeBlocks":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => CodeBlock.randJson()),
-    "members": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "members":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Member.randJson()),
     "privateSection": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
     "publicSection": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
@@ -1206,7 +1206,7 @@ $privateCustomBlock}
 
 /// The set of decls of given access from specific instance of
 /// item extending Decls (e.g. Module, Union, Template, Struct)
-class FilteredDecls extends Decls { 
+class FilteredDecls extends Decls {
   String _name;
   /// The generated name for filtered decls
   String get name => _name;
@@ -1235,16 +1235,16 @@ class FilteredDecls extends Decls {
 
 // end <class FilteredDecls>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "name": EBISU_UTILS.toJson(_name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "Decls": super.toJson(),
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
     };
@@ -1253,11 +1253,11 @@ class FilteredDecls extends Decls {
 }
 
 /// What is required to know how to generate a constructor
-class Ctor { 
+class Ctor {
   Ctor(
     this.name
   ) {
-  
+
   }
   
   /// Name of struct being constructed
@@ -1298,19 +1298,19 @@ this(${parts.join(',\n     ')}) {
 
 // end <class Ctor>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "name": EBISU_UTILS.toJson(name),
     "members": EBISU_UTILS.toJson(members),
     // TODO: "Ctor": super.toJson(),
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
-    "members": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "members":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Member.randJson()),
     };
   }
@@ -1318,11 +1318,11 @@ this(${parts.join(',\n     ')}) {
 }
 
 /// Meta data required for D struct
-class Struct extends Decls { 
+class Struct extends Decls {
   Struct(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -1379,8 +1379,8 @@ class Struct extends Decls {
 
 // end <class Struct>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -1392,18 +1392,18 @@ class Struct extends Decls {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
     "ctor": EBISU_UTILS.randJson(_randomJsonGenerator, Ctor.randJson),
-    "templateParms": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "templateParms":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => TemplateParm.randJson()),
-    "members": 
-       EBISU_UTILS.randJson(_randomJsonGenerator, [], 
+    "members":
+       EBISU_UTILS.randJson(_randomJsonGenerator, [],
         () => Member.randJson()),
     };
   }
@@ -1411,11 +1411,11 @@ class Struct extends Decls {
 }
 
 /// Meta data required for D member
-class Member { 
+class Member {
   Member(
     this._id
   ) {
-  
+
   }
   
   final Id _id;
@@ -1496,8 +1496,8 @@ class Member {
 
 // end <class Member>
 
-  Map toJson() { 
-    return { 
+  Map toJson() {
+    return {
     "id": EBISU_UTILS.toJson(_id),
     "doc": EBISU_UTILS.toJson(doc),
     "name": EBISU_UTILS.toJson(_name),
@@ -1515,8 +1515,8 @@ class Member {
     };
   }
 
-  static Map randJson() { 
-    return { 
+  static Map randJson() {
+    return {
     "id": EBISU_UTILS.randJson(_randomJsonGenerator, Id.randJson),
     "doc": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "name": EBISU_UTILS.randJson(_randomJsonGenerator, String),

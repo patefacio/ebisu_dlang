@@ -1,5 +1,5 @@
 import "dart:io";
-import "package:pathos/path.dart" as path;
+import "package:path/path.dart" as path;
 import "package:ebisu/ebisu.dart";
 import "package:ebisu/ebisu_id.dart";
 import "package:ebisu/ebisu_compiler.dart";
