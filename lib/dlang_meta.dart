@@ -4,7 +4,7 @@ library dlang_meta;
 import 'dart:io';
 import 'dart:json' as JSON;
 import 'package:ebisu/ebisu.dart';
-import 'package:ebisu/ebisu_id.dart';
+import 'package:id/id.dart';
 import 'package:ebisu/ebisu_utils.dart' as EBISU_UTILS;
 import 'templates/dlang_meta.dart' as META;
 import 'package:pathos/path.dart' as path;

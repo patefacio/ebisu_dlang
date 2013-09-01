@@ -1,7 +1,7 @@
 import "dart:io";
 import "package:path/path.dart" as path;
 import "package:ebisu/ebisu.dart";
-import "package:ebisu/ebisu_id.dart";
+import "package:id/id.dart";
 import "package:ebisu/ebisu_compiler.dart";
 import "package:ebisu/ebisu_dart_meta.dart";
 
@@ -108,7 +108,7 @@ void main() {
         'io', 
         '"dart:json" as JSON', 
         '"package:ebisu/ebisu.dart"', 
-        '"package:ebisu/ebisu_id.dart"', 
+        '"package:id/id.dart"', 
         '"package:ebisu/ebisu_utils.dart" as EBISU_UTILS', 
         '"templates/dlang_meta.dart" as META',
         '"package:pathos/path.dart" as path',
