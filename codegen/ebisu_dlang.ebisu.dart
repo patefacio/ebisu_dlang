@@ -106,7 +106,6 @@ void main() {
       ..doc = 'Support for storing dlang meta data for purpose of generating code'
       ..imports = [
         'io', 
-        '"dart:json" as JSON', 
         '"package:ebisu/ebisu.dart"', 
         '"package:id/id.dart"', 
         '"package:ebisu/ebisu_utils.dart" as EBISU_UTILS', 
