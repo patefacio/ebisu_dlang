@@ -8,6 +8,9 @@ import 'package:id/id.dart';
 import 'package:ebisu/ebisu_utils.dart' as EBISU_UTILS;
 import 'templates/dlang_meta.dart' as META;
 import 'package:pathos/path.dart' as path;
+// custom <additional imports>
+// end <additional imports>
+
 part "src/dlang_meta/dlang_meta.dart";
 
 final BasicType voidT = new BasicType('void', null);

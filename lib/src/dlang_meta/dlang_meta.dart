@@ -124,7 +124,7 @@ class BasicType {
   ) {
 
   }
-  
+
   String _name;
   String get name => _name;
   dynamic _init;
@@ -160,7 +160,7 @@ class System {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this system
   Id get id => _id;
@@ -232,7 +232,7 @@ class Package {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this D package
   Id get id => _id;
@@ -305,7 +305,7 @@ class Module extends Decls {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this D package
   Id get id => _id;
@@ -400,7 +400,7 @@ class EnumValue {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this enum value
   Id get id => _id;
@@ -458,7 +458,7 @@ class TMixin {
   ) {
 
   }
-  
+
   /// Textual name of template mixin
   String name;
   /// D langauge access for this template mixin
@@ -503,7 +503,7 @@ class Enum {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this enum
   Id get id => _id;
@@ -565,7 +565,7 @@ class Constant {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this constant
   Id get id => _id;
@@ -638,7 +638,7 @@ class Union extends Decls {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this union
   Id get id => _id;
@@ -721,7 +721,7 @@ class Alias {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this alias
   Id get id => _id;
@@ -779,7 +779,7 @@ class ArrAlias {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this array alias
   Id get id => _id;
@@ -847,7 +847,7 @@ class AArrAlias {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this array alias
   Id get id => _id;
@@ -906,7 +906,7 @@ class TemplateParm {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this template parm
   Id get id => _id;
@@ -975,7 +975,7 @@ class Template extends Decls {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this template
   Id get id => _id;
@@ -1032,7 +1032,7 @@ class CodeBlock {
   ) {
 
   }
-  
+
   /// D langauge access for this code block
   DAccess dAccess = DAccess.PUBLIC;
   /// Block of code to be placed in a container
@@ -1259,7 +1259,7 @@ class Ctor {
   ) {
 
   }
-  
+
   /// Name of struct being constructed
   String name;
   /// Ordered list of members either included directly, etiher as is or with default init
@@ -1324,7 +1324,7 @@ class Struct extends Decls {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this D struct
   Id get id => _id;
@@ -1417,7 +1417,7 @@ class Member {
   ) {
 
   }
-  
+
   final Id _id;
   /// Id for this D member
   Id get id => _id;
