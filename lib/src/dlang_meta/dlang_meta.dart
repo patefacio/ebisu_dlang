@@ -169,9 +169,9 @@ class System {
   /// Top level path to which code is generated
   String rootPath;
   /// List of apps in the system
-  List<App> apps;
+  List<App> apps = [];
   /// List of apps in the system
-  List<Package> packages;
+  List<Package> packages = [];
   bool _finalized = false;
   /// Set to true when system is finalized
   bool get finalized => _finalized;
@@ -181,7 +181,7 @@ class System {
   void finalize() {
     if(!_finalized) {
       if(packages != null) packages.forEach((pkg) => pkg._finalize(this)); 
-      if(apps != null) app.forEach((pkg) => app._finalize(this)); 
+      if(apps != null) apps.forEach((app) => app._finalize(this)); 
       _finalized = true;
     }
   }
@@ -245,9 +245,9 @@ class Package {
   /// The generated name for enum
   String get name => _name;
   /// List of modules in the package
-  List<Module> modules;
+  List<Module> modules = [];
   /// List of packages in the package
-  List<Package> packages;
+  List<Package> packages = [];
 
 // custom <class Package>
 
@@ -518,7 +518,7 @@ class Enum {
   /// D langauge access for this enum
   DAccess dAccess = DAccess.PUBLIC;
   /// List if Id's that constitute the values
-  List<EnumValue> values;
+  List<EnumValue> values = [];
 
 // custom <class Enum>
 
@@ -987,7 +987,7 @@ class Template extends Decls {
   String _name;
   /// The generated name for template
   String get name => _name;
-  List<TemplateParm> templateParms;
+  List<TemplateParm> templateParms = [];
   /// D langauge access for this D struct
   DAccess dAccess = DAccess.PUBLIC;
 

@@ -177,10 +177,12 @@ void main() {
             ..doc = 'Top level path to which code is generated',
             member('apps')
             ..doc = 'List of apps in the system'
-            ..type = 'List<App>',
+            ..type = 'List<App>'
+            ..classInit = '[]',
             member('packages')
             ..doc = 'List of apps in the system'
-            ..type = 'List<Package>',
+            ..type = 'List<Package>'
+            ..classInit = '[]',
             member('finalized')
             ..doc = 'Set to true when system is finalized'
             ..type = 'bool'
@@ -196,10 +198,12 @@ void main() {
             name_member('enum'),
             member('modules')
             ..doc = 'List of modules in the package'
-            ..type = 'List<Module>',
+            ..type = 'List<Module>'
+            ..classInit = '[]',
             member('packages')
             ..doc = 'List of packages in the package'
-            ..type = 'List<Package>',
+            ..type = 'List<Package>'
+            ..classInit = '[]',
           ],
           class_('module')
           ..extend = 'Decls'
@@ -252,6 +256,7 @@ void main() {
             member('values')
             ..doc = "List if Id's that constitute the values"
             ..type = 'List<EnumValue>'
+            ..classInit = '[]'
           ],
           class_('constant')
           ..members = [
@@ -336,7 +341,9 @@ ArrAlias('foo')..immutable = false => "alias Foo[] FooArr"
             doc_member('template'),
             parent_member('template'),
             name_member('template'),
-            member('template_parms')..type = 'List<TemplateParm>',
+            member('template_parms')
+              ..type = 'List<TemplateParm>'
+              ..classInit='[]',
             d_access_member('D struct'),
           ],
           class_('code_block')
