@@ -95,7 +95,6 @@ void main() {
     ..pubSpec = (pubspec('ebisu_dlang')
         ..doc = 'A library that supports code generation of dart and others'
         ..dependencies = [
-          pubdep('pathos'),
           pubdep('ebisu')
           ..gitRef = 'HEAD'
           ..path = 'git://github.com/patefacio/ebisu',
@@ -145,6 +144,11 @@ void main() {
           ..doc = 'Access for member variable - ia - inaccessible, ro - read/only, rw read/write'
           ..values = [
             id('ia'), id('ro'), id('rw')
+          ],
+          enum_('pass_type')
+          ..doc = 'Pass const(T), or immutable(T) - if null then just T'
+          ..values = [
+            id('c'), id('i'), 
           ],
           enum_('d_access')
           ..doc = 'Access in the D sense'
@@ -425,16 +429,20 @@ Existance of any _tParms_ implies this struct is a template struct.
             ..doc = 'Name of member as stored in struct/class/union'
             ..access = Access.RO,
             access_member('D member'),
+            member('usage')..type = 'Access'..classInit = 'Access.RW',
             member('type')..doc = 'The type for this member'..type = 'dynamic',
             member('init')..doc = 'What to initialize member to'..type = 'dynamic',
             member('by_ref')
             ..doc = 'If set preferred pass type is by ref'
             ..type = 'bool'
             ..classInit = 'false',
-            member('by_const')
-            ..doc = 'If set preferred pass type is by const (the default)'
+            member('pass_type')
+            ..doc = 'How this member should be passed'
+            ..type = 'PassType',
+            member('g_dup')
+            ..doc = 'If set and ctor is true will be duped'
             ..type = 'bool'
-            ..classInit = 'true',
+            ..classInit = 'false',
             member('cast_dup')
             ..doc = '''If set and dup is perform an const cast is provided.
  This allows duping things like maps from const into non-const since safel'''
@@ -448,6 +456,11 @@ Existance of any _tParms_ implies this struct is a template struct.
             ..doc = '''If set this member is included in the ctor with `init` member as the default.
 It only makes sense to use either `ctor` or `ctor_defaulted` and if using
 `ctor_defaulted` init should be set.'''
+            ..type = 'bool'
+            ..classInit = 'false',
+            member('is_reference')
+            ..doc = '''If true this data is reference data held on by the instance.
+It will be passed to ctor and stored as immutable'''
             ..type = 'bool'
             ..classInit = 'false'
           ]

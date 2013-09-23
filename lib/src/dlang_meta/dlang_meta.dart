@@ -35,6 +35,37 @@ class Access {
 
 }
 
+/// Pass const(T), or immutable(T) - if null then just T
+class PassType {
+  static const C = const PassType._(0);
+  static const I = const PassType._(1);
+
+  static get values => [
+    C,
+    I
+  ];
+
+  final int value;
+
+  const PassType._(this.value);
+
+  String toString() {
+    switch(this) {
+      case C: return "C";
+      case I: return "I";
+    }
+  }
+
+  static PassType fromString(String s) {
+    switch(s) {
+      case "C": return C;
+      case "I": return I;
+    }
+  }
+
+
+}
+
 /// Access in the D sense
 class DAccess {
   static const PUBLIC = const DAccess._(0);
@@ -118,16 +149,10 @@ class Udt {
 }
 
 class BasicType {
-  BasicType(
-    this._name,
-    this._init
-  ) {
 
-  }
+  BasicType(this._name, this._init);
 
-  String _name;
   String get name => _name;
-  dynamic _init;
   dynamic get init => _init;
 
 // custom <class BasicType>
@@ -138,9 +163,8 @@ class BasicType {
 
   Map toJson() {
     return {
-    "name": EBISU_UTILS.toJson(_name),
-    "init": EBISU_UTILS.toJson(_init),
-    // TODO: "BasicType": super.toJson(),
+    "name": EBISU_UTILS.toJson(name),
+    "init": EBISU_UTILS.toJson(init),
     };
   }
 
@@ -151,17 +175,15 @@ class BasicType {
     };
   }
 
+  String _name;
+  dynamic _init;
 }
 
 /// Holder for packages, apps, and the root path
 class System {
-  System(
-    this._id
-  ) {
 
-  }
+  System(this._id);
 
-  final Id _id;
   /// Id for this system
   Id get id => _id;
   /// Documentation for this system
@@ -172,7 +194,6 @@ class System {
   List<App> apps = [];
   /// List of apps in the system
   List<Package> packages = [];
-  bool _finalized = false;
   /// Set to true when system is finalized
   bool get finalized => _finalized;
 
@@ -198,13 +219,12 @@ class System {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
     "rootPath": EBISU_UTILS.toJson(rootPath),
     "apps": EBISU_UTILS.toJson(apps),
     "packages": EBISU_UTILS.toJson(packages),
-    "finalized": EBISU_UTILS.toJson(_finalized),
-    // TODO: "System": super.toJson(),
+    "finalized": EBISU_UTILS.toJson(finalized),
     };
   }
 
@@ -223,25 +243,21 @@ class System {
     };
   }
 
+  final Id _id;
+  bool _finalized = false;
 }
 
 /// Meta data required for D package
 class Package {
-  Package(
-    this._id
-  ) {
 
-  }
+  Package(this._id);
 
-  final Id _id;
   /// Id for this D package
   Id get id => _id;
   /// Documentation for this D package
   String doc;
-  dynamic _parent;
   /// Reference to parent of this D package
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for enum
   String get name => _name;
   /// List of modules in the package
@@ -273,12 +289,11 @@ class Package {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "modules": EBISU_UTILS.toJson(modules),
     "packages": EBISU_UTILS.toJson(packages),
-    // TODO: "Package": super.toJson(),
     };
   }
 
@@ -296,22 +311,20 @@ class Package {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 /// Meta data required for D module
 class Module extends Decls {
-  Module(
-    this._id
-  ) {
 
-  }
+  Module(this._id);
 
-  final Id _id;
   /// Id for this D package
   Id get id => _id;
   /// Documentation for this D package
   String doc;
-  dynamic _parent;
   /// Reference to parent of this D struct
   dynamic get parent => _parent;
   /// List of modules to import
@@ -332,8 +345,11 @@ class Module extends Decls {
     _parent = parent;
 
     List<String> orderImports(List<String> listImports) {
-      listImports = listImports.map((i) => standardImports.contains(i)? 
-          "std.${i}" : i).toList();
+      listImports = 
+        new Set.from(listImports.map((i) => 
+                standardImports.contains(i)?            
+                "std.${i}" : i)).toList();
+
       listImports.sort();
       // Put std imports at end
       listImports = listImports.where((i) => !i.contains('std.')).toList()
@@ -366,7 +382,7 @@ class Module extends Decls {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
     "imports": EBISU_UTILS.toJson(imports),
     "publicImports": EBISU_UTILS.toJson(publicImports),
@@ -391,20 +407,17 @@ class Module extends Decls {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
 }
 
 /// An entry in an enum
 class EnumValue {
-  EnumValue(
-    this._id
-  ) {
 
-  }
+  EnumValue(this._id);
 
-  final Id _id;
   /// Id for this enum value
   Id get id => _id;
-  String _name;
   /// The generated name for enum value
   String get name => _name;
   /// Documentation for this enum value
@@ -432,11 +445,10 @@ class EnumValue {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
-    "name": EBISU_UTILS.toJson(_name),
+    "id": EBISU_UTILS.toJson(id),
+    "name": EBISU_UTILS.toJson(name),
     "doc": EBISU_UTILS.toJson(doc),
     "value": EBISU_UTILS.toJson(value),
-    // TODO: "EnumValue": super.toJson(),
     };
   }
 
@@ -449,15 +461,14 @@ class EnumValue {
     };
   }
 
+  final Id _id;
+  String _name;
 }
 
 /// A template mixin
 class TMixin {
-  TMixin(
-    this.name
-  ) {
 
-  }
+  TMixin(this.name);
 
   /// Textual name of template mixin
   String name;
@@ -481,7 +492,6 @@ class TMixin {
     "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "tArgs": EBISU_UTILS.toJson(tArgs),
-    // TODO: "TMixin": super.toJson(),
     };
   }
 
@@ -498,21 +508,15 @@ class TMixin {
 }
 
 class Enum {
-  Enum(
-    this._id
-  ) {
 
-  }
+  Enum(this._id);
 
-  final Id _id;
   /// Id for this enum
   Id get id => _id;
   /// Documentation for this enum
   String doc;
-  dynamic _parent;
   /// Reference to parent of this enum
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for enum
   String get name => _name;
   /// D langauge access for this enum
@@ -536,12 +540,11 @@ class Enum {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "values": EBISU_UTILS.toJson(values),
-    // TODO: "Enum": super.toJson(),
     };
   }
 
@@ -557,24 +560,21 @@ class Enum {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 class Constant {
-  Constant(
-    this._id
-  ) {
 
-  }
+  Constant(this._id);
 
-  final Id _id;
   /// Id for this constant
   Id get id => _id;
   /// Documentation for this constant
   String doc;
-  dynamic _parent;
   /// Reference to parent of this constant
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for constant
   String get name => _name;
   /// D langauge access for this constant
@@ -605,15 +605,14 @@ class Constant {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "isStatic": EBISU_UTILS.toJson(isStatic),
     "hasStaticThis": EBISU_UTILS.toJson(hasStaticThis),
     "type": EBISU_UTILS.toJson(type),
     "init": EBISU_UTILS.toJson(init),
-    // TODO: "Constant": super.toJson(),
     };
   }
 
@@ -630,24 +629,21 @@ class Constant {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 class Union extends Decls {
-  Union(
-    this._id
-  ) {
 
-  }
+  Union(this._id);
 
-  final Id _id;
   /// Id for this union
   Id get id => _id;
   /// Documentation for this union
   String doc;
-  dynamic _parent;
   /// Reference to parent of this union
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for union
   String get name => _name;
   /// D langauge access for this D struct
@@ -672,9 +668,9 @@ class Union extends Decls {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "members": EBISU_UTILS.toJson(members),
     "Decls": super.toJson(),
@@ -693,6 +689,9 @@ class Union extends Decls {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 /// TODO: add support for apps
@@ -703,7 +702,6 @@ class App {
 
   Map toJson() {
     return {
-    // TODO: "App": super.toJson(),
     };
   }
 
@@ -716,18 +714,13 @@ class App {
 
 /// Declaration for an alias
 class Alias {
-  Alias(
-    this._id
-  ) {
 
-  }
+  Alias(this._id);
 
-  final Id _id;
   /// Id for this alias
   Id get id => _id;
   /// Documentation for this alias
   String doc;
-  String _name;
   /// The generated name for alias
   String get name => _name;
   /// D langauge access for this D struct
@@ -751,12 +744,11 @@ class Alias {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "aliased": EBISU_UTILS.toJson(aliased),
-    // TODO: "Alias": super.toJson(),
     };
   }
 
@@ -770,22 +762,19 @@ class Alias {
     };
   }
 
+  final Id _id;
+  String _name;
 }
 
 /// Declaration for an alias to an array
 class ArrAlias {
-  ArrAlias(
-    this._id
-  ) {
 
-  }
+  ArrAlias(this._id);
 
-  final Id _id;
   /// Id for this array alias
   Id get id => _id;
   /// Documentation for this array alias
   String doc;
-  String _name;
   /// The generated name for array alias
   String get name => _name;
   /// D langauge access for this array alias
@@ -817,13 +806,12 @@ class ArrAlias {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "aliased": EBISU_UTILS.toJson(aliased),
     "immutable": EBISU_UTILS.toJson(immutable),
-    // TODO: "ArrAlias": super.toJson(),
     };
   }
 
@@ -838,22 +826,19 @@ class ArrAlias {
     };
   }
 
+  final Id _id;
+  String _name;
 }
 
 /// Declaration for an alias to an associative array
 class AArrAlias {
-  AArrAlias(
-    this._id
-  ) {
 
-  }
+  AArrAlias(this._id);
 
-  final Id _id;
   /// Id for this array alias
   Id get id => _id;
   /// Documentation for this array alias
   String doc;
-  String _name;
   /// The generated name for array alias
   String get name => _name;
   /// D langauge access for this array alias
@@ -877,13 +862,12 @@ class AArrAlias {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "key": EBISU_UTILS.toJson(key),
     "value": EBISU_UTILS.toJson(value),
-    // TODO: "AArrAlias": super.toJson(),
     };
   }
 
@@ -898,24 +882,20 @@ class AArrAlias {
     };
   }
 
+  final Id _id;
+  String _name;
 }
 
 class TemplateParm {
-  TemplateParm(
-    this._id
-  ) {
 
-  }
+  TemplateParm(this._id);
 
-  final Id _id;
   /// Id for this template parm
   Id get id => _id;
   /// Documentation for this template parm
   String doc;
-  dynamic _parent;
   /// Reference to parent of this template parm
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for template parm
   String get name => _name;
   /// Name of the type
@@ -945,13 +925,12 @@ class TemplateParm {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "typeName": EBISU_UTILS.toJson(typeName),
     "isAlias": EBISU_UTILS.toJson(isAlias),
     "init": EBISU_UTILS.toJson(init),
-    // TODO: "TemplateParm": super.toJson(),
     };
   }
 
@@ -966,25 +945,22 @@ class TemplateParm {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 /// Defines a D template
 class Template extends Decls {
-  Template(
-    this._id
-  ) {
 
-  }
+  Template(this._id);
 
-  final Id _id;
   /// Id for this template
   Id get id => _id;
   /// Documentation for this template
   String doc;
-  dynamic _parent;
   /// Reference to parent of this template
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for template
   String get name => _name;
   List<TemplateParm> templateParms = [];
@@ -1002,9 +978,9 @@ class Template extends Decls {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "templateParms": EBISU_UTILS.toJson(templateParms),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "Decls": super.toJson(),
@@ -1023,15 +999,15 @@ class Template extends Decls {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 /// Container for generated code
 class CodeBlock {
-  CodeBlock(
-    this.code
-  ) {
 
-  }
+  CodeBlock(this.code);
 
   /// D langauge access for this code block
   DAccess dAccess = DAccess.PUBLIC;
@@ -1046,7 +1022,6 @@ class CodeBlock {
     return {
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "code": EBISU_UTILS.toJson(code),
-    // TODO: "CodeBlock": super.toJson(),
     };
   }
 
@@ -1136,7 +1111,7 @@ ${indentBlock(chomp(META.decls(d)))}
     }
 
     d = this.filter(DAccess.PRIVATE);
-    if(!d.empty()) {
+    if(!d.empty() || privateSection) {
       result.add('''
 private {
 ${indentBlock(chomp(META.decls(d)))}
@@ -1163,7 +1138,6 @@ $privateCustomBlock}
     "privateSection": EBISU_UTILS.toJson(privateSection),
     "publicSection": EBISU_UTILS.toJson(publicSection),
     "unitTest": EBISU_UTILS.toJson(unitTest),
-    // TODO: "Decls": super.toJson(),
     };
   }
 
@@ -1207,7 +1181,6 @@ $privateCustomBlock}
 /// The set of decls of given access from specific instance of
 /// item extending Decls (e.g. Module, Union, Template, Struct)
 class FilteredDecls extends Decls {
-  String _name;
   /// The generated name for filtered decls
   String get name => _name;
   /// D langauge access for this filtered decls
@@ -1237,7 +1210,7 @@ class FilteredDecls extends Decls {
 
   Map toJson() {
     return {
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "Decls": super.toJson(),
     };
@@ -1250,15 +1223,13 @@ class FilteredDecls extends Decls {
     };
   }
 
+  String _name;
 }
 
 /// What is required to know how to generate a constructor
 class Ctor {
-  Ctor(
-    this.name
-  ) {
 
-  }
+  Ctor(this.name);
 
   /// Name of struct being constructed
   String name;
@@ -1271,7 +1242,10 @@ class Ctor {
     List<String> parts = [];
     List<String> assignments = [];
     members.forEach((m) {
-      String passType = m.byConst? "const(${m.type})" : m.type;
+      String passType = 
+        (m.passType == null)? m.type :
+        ((m.passType == PassType.C) ? 'const(${m.type})' :
+            'immutable(${m.type})');
       String part = m.byRef? "ref ${passType} ${m.name}" :
         "${passType} ${m.name}";
       if(m.ctorDefaulted) {
@@ -1284,7 +1258,7 @@ class Ctor {
       parts.add(part);
       String rhs = m.castDup? 
         "(cast(${m.type})${m.name}).dup" :
-        (m.byRef? "${m.name}.gdup" : m.name);
+        (m.gDup? "${m.name}.gdup" : m.name);
 
       assignments.add("this.${m.vName} = ${rhs}");
     });
@@ -1302,7 +1276,6 @@ this(${parts.join(',\n     ')}) {
     return {
     "name": EBISU_UTILS.toJson(name),
     "members": EBISU_UTILS.toJson(members),
-    // TODO: "Ctor": super.toJson(),
     };
   }
 
@@ -1319,21 +1292,15 @@ this(${parts.join(',\n     ')}) {
 
 /// Meta data required for D struct
 class Struct extends Decls {
-  Struct(
-    this._id
-  ) {
 
-  }
+  Struct(this._id);
 
-  final Id _id;
   /// Id for this D struct
   Id get id => _id;
   /// Documentation for this D struct
   String doc;
-  dynamic _parent;
   /// Reference to parent of this D struct
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for D struct
   String get name => _name;
   /// D langauge access for this D struct
@@ -1381,9 +1348,9 @@ class Struct extends Decls {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
     "ctor": EBISU_UTILS.toJson(ctor),
     "templateParms": EBISU_UTILS.toJson(templateParms),
@@ -1408,42 +1375,41 @@ class Struct extends Decls {
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
 }
 
 /// Meta data required for D member
 class Member {
-  Member(
-    this._id
-  ) {
 
-  }
+  Member(this._id);
 
-  final Id _id;
   /// Id for this D member
   Id get id => _id;
   /// Documentation for this D member
   String doc;
-  dynamic _parent;
   /// Reference to parent of this D member
   dynamic get parent => _parent;
-  String _name;
   /// The generated name for D member
   String get name => _name;
   /// D langauge access for this D struct
   DAccess dAccess = DAccess.PUBLIC;
-  String _vName;
   /// Name of member as stored in struct/class/union
   String get vName => _vName;
   /// D developer access for this D member
   Access access = Access.RW;
+  Access usage = Access.RW;
   /// The type for this member
   dynamic type;
   /// What to initialize member to
   dynamic init;
   /// If set preferred pass type is by ref
   bool byRef = false;
-  /// If set preferred pass type is by const (the default)
-  bool byConst = true;
+  /// How this member should be passed
+  PassType passType;
+  /// If set and ctor is true will be duped
+  bool gDup = false;
   /// If set and dup is perform an const cast is provided.
   ///  This allows duping things like maps from const into non-const since safel
   bool castDup = false;
@@ -1453,6 +1419,9 @@ class Member {
   /// It only makes sense to use either `ctor` or `ctor_defaulted` and if using
   /// `ctor_defaulted` init should be set.
   bool ctorDefaulted = false;
+  /// If true this data is reference data held on by the instance.
+  /// It will be passed to ctor and stored as immutable
+  bool isReference = false;
 
 // custom <class Member>
 
@@ -1476,6 +1445,10 @@ class Member {
       }
       _vName = _name;
     }
+    if(isReference) {
+      usage = Access.RO;
+      if(passType == null) passType = PassType.I;
+    }
     if(null == type) {
       type = _id.capCamel;
     }
@@ -1486,10 +1459,11 @@ class Member {
     if(null != doc) {
       result += (blockComment(doc) + '\n');
     }
+    var t = isReference? 'immutable($type)' : type;
     if(null != init) {
-      result += '${type} ${_vName} = ${init}';
+      result += '${t} ${_vName} = ${init}';
     } else {
-      result += '${type} ${_vName}';
+      result += '${t} ${_vName}';
     }
     return result;
   }
@@ -1498,20 +1472,22 @@ class Member {
 
   Map toJson() {
     return {
-    "id": EBISU_UTILS.toJson(_id),
+    "id": EBISU_UTILS.toJson(id),
     "doc": EBISU_UTILS.toJson(doc),
-    "name": EBISU_UTILS.toJson(_name),
+    "name": EBISU_UTILS.toJson(name),
     "dAccess": EBISU_UTILS.toJson(dAccess),
-    "vName": EBISU_UTILS.toJson(_vName),
+    "vName": EBISU_UTILS.toJson(vName),
     "access": EBISU_UTILS.toJson(access),
+    "usage": EBISU_UTILS.toJson(usage),
     "type": EBISU_UTILS.toJson(type),
     "init": EBISU_UTILS.toJson(init),
     "byRef": EBISU_UTILS.toJson(byRef),
-    "byConst": EBISU_UTILS.toJson(byConst),
+    "passType": EBISU_UTILS.toJson(passType),
+    "gDup": EBISU_UTILS.toJson(gDup),
     "castDup": EBISU_UTILS.toJson(castDup),
     "ctor": EBISU_UTILS.toJson(ctor),
     "ctorDefaulted": EBISU_UTILS.toJson(ctorDefaulted),
-    // TODO: "Member": super.toJson(),
+    "isReference": EBISU_UTILS.toJson(isReference),
     };
   }
 
@@ -1523,16 +1499,23 @@ class Member {
     "dAccess": EBISU_UTILS.randJson(_randomJsonGenerator, DAccess.randJson),
     "vName": EBISU_UTILS.randJson(_randomJsonGenerator, String),
     "access": EBISU_UTILS.randJson(_randomJsonGenerator, Access.randJson),
+    "usage": EBISU_UTILS.randJson(_randomJsonGenerator, Access.randJson),
     "type": EBISU_UTILS.randJson(_randomJsonGenerator, dynamic.randJson),
     "init": EBISU_UTILS.randJson(_randomJsonGenerator, dynamic.randJson),
     "byRef": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
-    "byConst": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
+    "passType": EBISU_UTILS.randJson(_randomJsonGenerator, PassType.randJson),
+    "gDup": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
     "castDup": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
     "ctor": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
     "ctorDefaulted": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
+    "isReference": EBISU_UTILS.randJson(_randomJsonGenerator, bool),
     };
   }
 
+  final Id _id;
+  dynamic _parent;
+  String _name;
+  String _vName;
 }
 // custom <part dlang_meta>
 
@@ -1605,6 +1588,8 @@ String importPackage(String i) {
 
 String importStatement(String i) => "import ${importPackage(i)}";
 
+var I = PassType.I;
+var C = PassType.C;
 
 // end <part dlang_meta>
 
