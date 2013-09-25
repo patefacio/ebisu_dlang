@@ -10,7 +10,7 @@ import 'templates/dlang_meta.dart' as META;
 // custom <additional imports>
 // end <additional imports>
 
-part "src/dlang_meta/dlang_meta.dart";
+part 'src/dlang_meta/dlang_meta.dart';
 
 final BasicType voidT = new BasicType('void', null);
 

@@ -584,7 +584,7 @@ class Constant {
   /// True if constant is requires static this
   bool hasStaticThis = false;
   /// Type of the constant
-  String type = "String";
+  String type = 'String';
   /// Value to initialize the constant with
   dynamic init;
 
