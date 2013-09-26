@@ -115,8 +115,6 @@ Plus it will provide a key to use the language as developer sees fit. This key i
         ..doc = 'A library that supports code generation of dart and others'
         ..dependencies = [
           pubdep('ebisu')
-          ..gitRef = 'HEAD'
-          ..path = 'git://github.com/patefacio/ebisu',
         ]
                  )
     ..libraries = [
@@ -490,7 +488,6 @@ It will be passed to ctor and stored as immutable'''
   ebisu.libraries.forEach((library) {
     library.parts.forEach((part) {
       part.classes.forEach((c) {
-        c.toJsonSupport = true;
       });
     });
   });
