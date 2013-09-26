@@ -117,6 +117,16 @@ Plus it will provide a key to use the language as developer sees fit. This key i
           pubdep('ebisu')..version = '>=0.0.1'
         ]
                  )
+    ..testLibraries = [
+      library('test_code_generation')
+      ..includeLogger = true
+      ..imports = [ 'io', 'package:path/path.dart',
+        'utils.dart', 'package:ebisu_dlang/dlang_meta.dart' ]
+      ..variables = [
+        variable('scratch_remove_me_folder')
+        ..isPublic = false
+      ]
+    ]
     ..libraries = [
       library('dlang_meta')
       ..doc = 'Support for storing dlang meta data for purpose of generating code'

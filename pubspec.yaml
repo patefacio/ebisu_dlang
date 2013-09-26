@@ -6,6 +6,8 @@ description: >
 dependencies:
   ebisu: ">=0.0.1"
 
+  logging: ">=0.7.1"
+
 # custom <ebisu_dlang dependencies>
 
 # end <ebisu_dlang dependencies>
