@@ -1032,12 +1032,12 @@ TMixin tmixin(String mixinName) => new TMixin(mixinName);
 TemplateParm tparm(String _id) => new TemplateParm(id(_id));
 CodeBlock codeBlock(String code) => new CodeBlock(code);
 
-
+var aArr = aArrAlias;
 Alias arr(String type, { bool mutable : false, String of }) {
   String aliasedType;
 
   if(of != null) {
-    aliasedType = "${of}Arr";
+    aliasedType = of;
   } else {
     aliasedType = id(type).capCamel;
   }

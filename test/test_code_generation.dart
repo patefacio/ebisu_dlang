@@ -75,7 +75,7 @@ genTest(label, updates(),
     updates();
     _generate();
     var modText = _readModule();
-    _logger.fine('<$label>$line\n$modText$line');
+    _logger.info('<$label>$line\n$modText$line');
     want.forEach((p) {
       expect(modText.contains(pattern(p)), true);
     });
@@ -97,7 +97,7 @@ main() {
     _makeTestSystem();
     _generate();
     var modText = _readModule();
-    _logger.fine('Module Contents:\n$modText');
+    _logger.info('Module Contents:\n$modText');
     test('module statement is correct', () =>
         expect(modText
             .contains(pattern(r'module\s+test_package.test_module')), true));
@@ -138,6 +138,47 @@ main() {
           r'Setting suns and lonely lovers free\s+\*/\s+Green'
         ]);
   });
+
+  group('test struct members', () {
+    genTest('members typed correctly',
+        () => _testModule..structs = [
+          struct('s')
+          ..members = [
+            member('i')..type = 'int',
+            member('d')..type = 'double',
+            member('f')..type = 'float',
+            member('s')..type = 'string'
+          ]
+        ],
+        want: [
+          r'int\s+i',
+          r'double\s+d',
+          r'float\s+f',
+          r'string\s+s',
+        ]);
+  });
+
+  group('test class aliases defined', () {
+    genTest('aliases typed correctly',
+        () => _testModule..structs = [
+          struct('s')
+          ..aliases = [
+            alias('foo')..aliased = 'Moo',
+            arr('i'),
+            arr('j', mutable:true),
+            arr('donkey', mutable:true, of:'Dog'),
+            aArr('goo', 'string', 'double'),
+          ]
+        ],
+        want: [
+          r'alias\s+Moo\s+Foo',
+          r'alias\s+immutable\(I\)\[\]\s+IArr',
+          r'alias\s+J\[\]\s+JArr',
+          r'alias\s+Dog\[\]\s+DonkeyArr',
+          r'alias\s+double\[string\]\s+GooMap',          
+        ]);
+  });
+
 
 // end <main>
 
