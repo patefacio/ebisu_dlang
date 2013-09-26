@@ -1085,5 +1085,9 @@ String importStatement(String i) => "import ${importPackage(i)}";
 var I = PassType.I;
 var C = PassType.C;
 
+var RO = Access.RO;
+var RW = Access.RW;
+var IA = Access.IA;
+
 // end <part dlang_meta>
 
