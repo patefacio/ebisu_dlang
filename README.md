@@ -4,6 +4,9 @@
 Code generation library that supports generating the structure of D code
 
 <!--- custom <introduction> --->
+
+[![Build Status](https://drone.io/github.com/patefacio/ebisu_dlang/status.png)](https://drone.io/github.com/patefacio/ebisu_dlang/latest)
+
 <!--- end <introduction> --->
 
 
