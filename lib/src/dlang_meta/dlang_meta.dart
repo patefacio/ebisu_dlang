@@ -302,7 +302,7 @@ class Module extends Decls {
       throw new StateError("Finalize the system before generating Module ${_id}");
 
     String targetFile = "${pkgPath}/${_id.snake}.d";
-    mergeWithFile(META.module(this), targetFile);
+    mergeWithFile(meta.module(this), targetFile);
   }
 
   dynamic get root => _parent.root;
@@ -394,7 +394,7 @@ class Enum {
 // custom <class Enum>
 
   String define() {
-    return META.enum(this);
+    return meta.enum(this);
   }
 
   void _finalize(dynamic parent) {
@@ -442,7 +442,7 @@ class Constant {
   }
 
   String define() {
-    return META.constant(this);
+    return meta.constant(this);
   }
 
 // end <class Constant>
@@ -478,7 +478,7 @@ class Union extends Decls {
   }
 
   String define() {
-    return META.union(this);
+    return meta.union(this);
   }
 
 // end <class Union>
@@ -736,12 +736,12 @@ class Decls {
     String privateCustomBlock = 
       (privateSection)? "\n${customBlock('${runtimeType.toString().toLowerCase()} private $name')}\n" : '';
 
-    List<String> result = [ META.decls(this.filter(DAccess.PUBLIC)), publicCustomBlock ];
+    List<String> result = [ meta.decls(this.filter(DAccess.PUBLIC)), publicCustomBlock ];
     Decls d = this.filter(DAccess.EXPORT);
     if(!d.empty()) {
       result.add('''
 export {
-${indentBlock(chomp(META.decls(d)))}
+${indentBlock(chomp(meta.decls(d)))}
 }
 ''');
     }
@@ -749,7 +749,7 @@ ${indentBlock(chomp(META.decls(d)))}
     if(!d.empty()) {
       result.add('''
 package {
-${indentBlock(chomp(META.decls(d)))}
+${indentBlock(chomp(meta.decls(d)))}
 }
 ''');
     }
@@ -758,7 +758,7 @@ ${indentBlock(chomp(META.decls(d)))}
     if(!d.empty()) {
       result.add('''
 protected {
-${indentBlock(chomp(META.decls(d)))}
+${indentBlock(chomp(meta.decls(d)))}
 }
 ''');
     }
@@ -767,7 +767,7 @@ ${indentBlock(chomp(META.decls(d)))}
     if(!d.empty() || privateSection) {
       result.add('''
 private {
-${indentBlock(chomp(META.decls(d)))}
+${indentBlock(chomp(meta.decls(d)))}
 $privateCustomBlock}
 ''');
     }
@@ -908,7 +908,7 @@ class Struct extends Decls {
   String get templateName => "${name}${templateDecl}";
 
   String define() {
-    return META.struct(this);
+    return meta.struct(this);
   }
 
 // end <class Struct>
