@@ -91,6 +91,7 @@ void main() {
     ..classInit = 'Access.RW';
 
   System ebisu = system('ebisu_dlang')
+    ..includeHop = true
     ..rootPath = '$_topDir'
     ..introduction = '''
 Code generation library that supports generating the structure of D code
@@ -114,7 +115,7 @@ Plus it will provide a key to use the language as developer sees fit. This key i
     ..pubSpec = (pubspec('ebisu_dlang')
         ..doc = 'A library that supports code generation of dart and others'
         ..dependencies = [
-          pubdep('ebisu')..version = '>=0.0.1'
+          pubdep('ebisu')..version = '>=0.0.2'
         ]
                  )
     ..testLibraries = [

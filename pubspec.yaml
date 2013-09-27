@@ -4,7 +4,7 @@ author: Daniel Davidson <dbdavidson@yahoo.com>
 description: >
   A library that supports code generation of dart and others
 dependencies:
-  ebisu: ">=0.0.1"
+  ebisu: ">=0.0.2"
 
   logging: ">=0.7.1"
 
@@ -13,6 +13,8 @@ dependencies:
 # end <ebisu_dlang dependencies>
 
 dev_dependencies:
+  hop: ">=0.24.4"
+
 # custom <ebisu_dlang dev dependencies>
 # end <ebisu_dlang dev dependencies>
 
