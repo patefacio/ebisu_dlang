@@ -37,6 +37,9 @@ Plus it will provide a key to use the language as developer sees fit. This key i
 # Examples
 
 <!--- custom <examples> --->
+
+See the example folder
+
 <!--- end <examples> --->
 
 
