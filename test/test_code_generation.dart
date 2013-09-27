@@ -1,6 +1,7 @@
 library test_code_generation;
 
 import 'dart:io';
+import 'package:ebisu/ebisu.dart';
 import 'package:ebisu_dlang/dlang_meta.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
@@ -69,7 +70,11 @@ pattern(String s) => new RegExp(s, multiLine:true);
 get line => '\n--------------------------------------------------------\n';
 
 genTest(label, updates(), 
-    { want : const [],  dontWant : const [] }) {
+    { 
+      want : const [],  
+      dontWant : const [],
+      codeEquivalentText
+    }) {
   test(label, () {
     _makeTestSystem();
     updates();
@@ -82,6 +87,10 @@ genTest(label, updates(),
     dontWant.forEach((p) {
       expect(modText.contains(pattern(p)), false);
     });
+    if(codeEquivalentText != null) {
+      expect(
+        codeEquivalent(modText, codeEquivalentText), true);
+    }
   }); 
 }
 
@@ -108,20 +117,30 @@ main() {
         dontWant:['public', 'private', 'unittest']);
     genTest('has public and private when asked',
         () { _testModule..publicSection = true..privateSection = true; },
-        want: [ 
-          r'custom\s+<module public test_module>',
-          r'custom\s+<module private test_module>',
-        ]);
+        codeEquivalentText : '''
+module test_package.test_module;
+// custom <module public test_module>
+// end <module public test_module>
+private {
+// custom <module private test_module>
+// end <module private test_module>
+}
+'''
+            );
+
     genTest('has unittest when asked',
         () =>  _testModule..unitTest = true,
-        want: [ 
-          r'static\s+if\(1\)\s+unittest',
-          r'//\s+custom\s+<unittest test_module>\s*'
-          r'//\s+end\s+<unittest test_module>',
-        ]);
+        codeEquivalentText : '''
+module test_package.test_module;
+static if(1) unittest { 
+  // custom <unittest test_module>
+  // end <unittest test_module>
+}
+'''
+            );
   });
 
-  group('test enums', () {
+  group('test enums', () =>
     genTest('simple enums generated',
         () => _testModule
         ..enums = [
@@ -132,12 +151,24 @@ main() {
             ..doc = 'Setting suns and lonely lovers free',
             ev('blue')..value = '42' ]
         ],
-        want: [
-          r'enum\s+X\s+{\s+Foo,\s+Bar,\s+Goo\s+}',
-          r'Red\s*=\s*1', r'Green\s*=\s*2', r'Blue\s*=\s*42',
-          r'Setting suns and lonely lovers free\s+\*/\s+Green'
-        ]);
-  });
+        codeEquivalentText : '''
+module test_package.test_module;
+
+enum X { 
+  Foo,
+  Bar,
+  Goo
+}
+enum Color { 
+  Red = 1,
+  /**
+     Setting suns and lonely lovers free
+  */
+  Green = 2,
+  Blue = 42
+}
+
+'''));
 
   group('test struct members', () {
     genTest('members typed correctly',
@@ -150,12 +181,17 @@ main() {
             member('s')..type = 'string'
           ]
         ],
-        want: [
-          r'int\s+i',
-          r'double\s+d',
-          r'float\s+f',
-          r'string\s+s',
-        ]);
+        codeEquivalentText: '''
+module test_package.test_module;
+
+struct S { 
+  int i;
+  double d;
+  float f;
+  string s;
+}
+'''
+            );
   });
 
   group('test class aliases defined', () {
@@ -170,13 +206,17 @@ main() {
             aArr('goo', 'string', 'double'),
           ]
         ],
-        want: [
-          r'alias\s+Moo\s+Foo',
-          r'alias\s+immutable\(I\)\[\]\s+IArr',
-          r'alias\s+J\[\]\s+JArr',
-          r'alias\s+Dog\[\]\s+DonkeyArr',
-          r'alias\s+double\[string\]\s+GooMap',          
-        ]);
+        codeEquivalentText : '''
+module test_package.test_module;
+struct S { 
+  alias Moo Foo;
+  alias immutable(I)[] IArr;
+  alias J[] JArr;
+  alias Dog[] DonkeyArr;
+  alias double[string] GooMap;
+}
+'''
+            );
   });
 
 

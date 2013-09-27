@@ -120,7 +120,7 @@ Plus it will provide a key to use the language as developer sees fit. This key i
     ..testLibraries = [
       library('test_code_generation')
       ..includeLogger = true
-      ..imports = [ 'io', 'package:path/path.dart',
+      ..imports = [ 'io', 'package:path/path.dart', 'package:ebisu/ebisu.dart',
         'utils.dart', 'package:ebisu_dlang/dlang_meta.dart' ]
       ..variables = [
         variable('scratch_remove_me_folder')
