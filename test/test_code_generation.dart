@@ -99,8 +99,10 @@ genTest(label, updates(),
 main() { 
 // custom <main>
 
-  Logger.root.onRecord.listen((LogRecord r) =>
-      print("${r.loggerName} [${r.level}]:\t${r.message}"));
+  //////////////////////////////////////////////////////////////////////
+  // Uncomment for logging
+  //Logger.root.onRecord.listen((LogRecord r) =>
+  //    print("${r.loggerName} [${r.level}]:\t${r.message}"));
 
   group('test pkg/module naming', () {
     _makeTestSystem();
