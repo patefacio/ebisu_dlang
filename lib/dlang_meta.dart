@@ -3,10 +3,10 @@ library dlang_meta;
 
 import 'dart:io';
 import 'package:ebisu/ebisu.dart';
-import 'package:ebisu/ebisu_utils.dart' as EBISU_UTILS;
+import 'package:ebisu/ebisu_utils.dart' as ebisu_utils;
 import 'package:id/id.dart';
-import 'package:pathos/path.dart' as path;
-import 'templates/dlang_meta.dart' as META;
+import 'package:path/path.dart' as path;
+import 'templates/dlang_meta.dart' as meta;
 // custom <additional imports>
 // end <additional imports>
 

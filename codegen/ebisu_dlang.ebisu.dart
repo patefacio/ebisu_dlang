@@ -23,7 +23,7 @@ void main() {
   if(!noCompile) {
     TemplateFolder templateFolder = new TemplateFolder(templateFolderPath)
       ..imports = [ 
-        '"package:ebisu_dlang/dlang_meta.dart" as D_META'
+        '"package:ebisu_dlang/dlang_meta.dart" as d_meta'
       ];
     int filesUpdated = templateFolder.compile();
     if(filesUpdated>0) {
@@ -135,9 +135,9 @@ Plus it will provide a key to use the language as developer sees fit. This key i
         'io', 
         '"package:ebisu/ebisu.dart"', 
         '"package:id/id.dart"', 
-        '"package:ebisu/ebisu_utils.dart" as EBISU_UTILS', 
-        '"templates/dlang_meta.dart" as META',
-        '"package:pathos/path.dart" as path',
+        '"package:ebisu/ebisu_utils.dart" as ebisu_utils', 
+        '"templates/dlang_meta.dart" as meta',
+        '"package:path/path.dart" as path',
       ]
       ..variables = [
         variable('void_t')..type = 'BasicType'..isFinal = true..init = "new BasicType('void', null)",
