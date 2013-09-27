@@ -1,9 +1,7 @@
 /// Support for storing dlang meta data for purpose of generating code
 library dlang_meta;
 
-import 'dart:io';
 import 'package:ebisu/ebisu.dart';
-import 'package:ebisu/ebisu_utils.dart' as ebisu_utils;
 import 'package:id/id.dart';
 import 'package:path/path.dart' as path;
 import 'templates/dlang_meta.dart' as meta;

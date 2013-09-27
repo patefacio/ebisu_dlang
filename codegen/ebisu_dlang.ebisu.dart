@@ -132,10 +132,8 @@ Plus it will provide a key to use the language as developer sees fit. This key i
       library('dlang_meta')
       ..doc = 'Support for storing dlang meta data for purpose of generating code'
       ..imports = [
-        'io', 
         '"package:ebisu/ebisu.dart"', 
         '"package:id/id.dart"', 
-        '"package:ebisu/ebisu_utils.dart" as ebisu_utils', 
         '"templates/dlang_meta.dart" as meta',
         '"package:path/path.dart" as path',
       ]

@@ -1,6 +1,6 @@
 part of dlang_meta;
 
-String enum([dynamic _]) {
+String enum_([dynamic _]) {
   if(_ is Map) {
     _ = new Context(_);
   }
@@ -13,7 +13,7 @@ ${blockComment(_.doc)}
 ''');
  } 
   _buf.add('''
-enum ${_.name} { 
+enum ${_.name} {
 ${indentBlock(_.values.map((v) => v.decl).join(',\n'))}
 }
 ''');

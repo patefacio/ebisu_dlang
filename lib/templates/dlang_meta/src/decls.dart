@@ -22,9 +22,9 @@ ${chomp(constant.define())}
 ${alias.decl};
 ''');
  } 
- for(var enum in _.enums) { 
+ for(var e in _.enums) { 
   _buf.add('''
-${chomp(enum.define())}
+${chomp(e.define())}
 ''');
  } 
  for(var struct in _.structs) { 
@@ -37,9 +37,9 @@ ${chomp(struct.define(), true)}
 ${chomp(union.define())}
 ''');
  } 
- for(var template in _.templates) { 
+ for(var t in _.templates) { 
   _buf.add('''
-template(${templates.id})
+template(${t.id})
 ''');
  } 
  for(var codeBlock in _.codeBlocks) { 

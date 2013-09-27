@@ -7,8 +7,8 @@ ${chomp(constant.define())}
 #< for(var alias in _.aliases) { >
 ${alias.decl};
 #< } >
-#< for(var enum in _.enums) { >
-${chomp(enum.define())}
+#< for(var e in _.enums) { >
+${chomp(e.define())}
 #< } >
 #< for(var struct in _.structs) { >
 ${chomp(struct.define(), true)}
@@ -16,8 +16,8 @@ ${chomp(struct.define(), true)}
 #< for(var union in _.unions) { >
 ${chomp(union.define())}
 #< } >
-#< for(var template in _.templates) { >
-template(${templates.id})
+#< for(var t in _.templates) { >
+template(${t.id})
 #< } >
 #< for(var codeBlock in _.codeBlocks) { >
 ${chomp(codeBlock.code)}

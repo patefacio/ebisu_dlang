@@ -4,13 +4,13 @@ ${blockComment(_.doc)}
 module ${_.qualifiedName};
 
 #< for(String i in _.publicImports) { >
-public ${D_META.importStatement(i)};
+public ${d_meta.importStatement(i)};
 #< } >
 #< for(String i in _.imports) { >
-${D_META.importStatement(i)};
+${d_meta.importStatement(i)};
 #< } >
 #< for(String i in _.debugImports) { >
-debug ${D_META.importStatement(i)};
+debug ${d_meta.importStatement(i)};
 #< } >
 #< if (_.anyImports) { >
 

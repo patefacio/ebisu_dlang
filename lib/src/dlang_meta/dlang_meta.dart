@@ -394,7 +394,7 @@ class Enum {
 // custom <class Enum>
 
   String define() {
-    return meta.enum(this);
+    return meta.enum_(this);
   }
 
   void _finalize(dynamic parent) {
@@ -704,6 +704,10 @@ class Decls {
 
 // custom <class Decls>
 
+  String get name => 
+    throw new UnimplementedError(
+      "name getter must be implemented for ${runtimeType}");
+
   Decls(){}
 
   bool empty() {
@@ -723,7 +727,7 @@ class Decls {
     aliases.forEach((alias) => alias._finalize(this));
     constants.forEach((constant) => constant._finalize(this));
     structs.forEach((struct) => struct._finalize(this));
-    enums.forEach((enum) => enum._finalize(this));
+    enums.forEach((e) => e._finalize(this));
     unions.forEach((union) => union._finalize(this));
     templates.forEach((template) => template._finalize(this));
     // codeBlocks don't require finalize
