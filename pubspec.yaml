@@ -1,6 +1,7 @@
 name: ebisu_dlang
 version: 0.0.1
 author: Daniel Davidson <dbdavidson@yahoo.com>
+homepage: https://github.com/patefacio/ebisu_dlang
 description: >
   A library that supports code generation of dart and others
 dependencies:

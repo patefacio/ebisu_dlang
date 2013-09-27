@@ -92,6 +92,7 @@ void main() {
 
   System ebisu = system('ebisu_dlang')
     ..includeHop = true
+    ..license = 'boost'
     ..rootPath = '$_topDir'
     ..introduction = '''
 Code generation library that supports generating the structure of D code
@@ -114,6 +115,7 @@ Plus it will provide a key to use the language as developer sees fit. This key i
 '''
     ..pubSpec = (pubspec('ebisu_dlang')
         ..doc = 'A library that supports code generation of dart and others'
+        ..homepage = 'https://github.com/patefacio/ebisu_dlang'
         ..dependencies = [
           pubdep('ebisu')..version = '>=0.0.2'
         ]
