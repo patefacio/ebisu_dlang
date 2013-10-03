@@ -18,17 +18,17 @@ class Access {
 
   String toString() {
     switch(this) {
-      case IA: return "IA";
-      case RO: return "RO";
-      case RW: return "RW";
+      case IA: return "Ia";
+      case RO: return "Ro";
+      case RW: return "Rw";
     }
   }
 
   static Access fromString(String s) {
     switch(s) {
-      case "IA": return IA;
-      case "RO": return RO;
-      case "RW": return RW;
+      case "Ia": return IA;
+      case "Ro": return RO;
+      case "Rw": return RW;
     }
   }
 
@@ -88,21 +88,21 @@ class DAccess {
 
   String toString() {
     switch(this) {
-      case PUBLIC: return "PUBLIC";
-      case PRIVATE: return "PRIVATE";
-      case PACKAGE: return "PACKAGE";
-      case PROTECTED: return "PROTECTED";
-      case EXPORT: return "EXPORT";
+      case PUBLIC: return "Public";
+      case PRIVATE: return "Private";
+      case PACKAGE: return "Package";
+      case PROTECTED: return "Protected";
+      case EXPORT: return "Export";
     }
   }
 
   static DAccess fromString(String s) {
     switch(s) {
-      case "PUBLIC": return PUBLIC;
-      case "PRIVATE": return PRIVATE;
-      case "PACKAGE": return PACKAGE;
-      case "PROTECTED": return PROTECTED;
-      case "EXPORT": return EXPORT;
+      case "Public": return PUBLIC;
+      case "Private": return PRIVATE;
+      case "Package": return PACKAGE;
+      case "Protected": return PROTECTED;
+      case "Export": return EXPORT;
     }
   }
 
@@ -129,19 +129,19 @@ class Udt {
 
   String toString() {
     switch(this) {
-      case ALIAS: return "ALIAS";
-      case ENUM: return "ENUM";
-      case STRUCT: return "STRUCT";
-      case UNION: return "UNION";
+      case ALIAS: return "Alias";
+      case ENUM: return "Enum";
+      case STRUCT: return "Struct";
+      case UNION: return "Union";
     }
   }
 
   static Udt fromString(String s) {
     switch(s) {
-      case "ALIAS": return ALIAS;
-      case "ENUM": return ENUM;
-      case "STRUCT": return STRUCT;
-      case "UNION": return UNION;
+      case "Alias": return ALIAS;
+      case "Enum": return ENUM;
+      case "Struct": return STRUCT;
+      case "Union": return UNION;
     }
   }
 
