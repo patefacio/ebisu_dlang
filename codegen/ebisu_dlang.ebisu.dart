@@ -116,7 +116,7 @@ Plus it will provide a key to use the language as developer sees fit. This key i
     ..pubSpec = (pubspec('ebisu_dlang')
         ..doc = 'A library that supports code generation of the D Programming Language'
         ..homepage = 'https://github.com/patefacio/ebisu_dlang'
-        ..version = '0.0.2'
+        ..version = '0.0.3'
         ..dependencies = [
           pubdep('ebisu')..version = '>=0.0.3'
         ]
