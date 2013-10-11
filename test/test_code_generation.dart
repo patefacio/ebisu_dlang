@@ -138,6 +138,9 @@ static if(1) unittest {
   // custom <unittest test_module>
   // end <unittest test_module>
 }
+version(unittest) {
+  import specd.specd;
+}
 '''
             );
   });

@@ -5,7 +5,7 @@ homepage: https://github.com/patefacio/ebisu_dlang
 description: >
   A library that supports code generation of the D Programming Language
 dependencies:
-  ebisu: ">=0.0.2"
+  ebisu: ">=0.0.3"
 
   logging: ">=0.7.1"
 

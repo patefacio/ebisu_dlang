@@ -118,7 +118,7 @@ Plus it will provide a key to use the language as developer sees fit. This key i
         ..homepage = 'https://github.com/patefacio/ebisu_dlang'
         ..version = '0.0.2'
         ..dependencies = [
-          pubdep('ebisu')..version = '>=0.0.2'
+          pubdep('ebisu')..version = '>=0.0.3'
         ]
                  )
     ..testLibraries = [
@@ -257,6 +257,7 @@ Plus it will provide a key to use the language as developer sees fit. This key i
             ..doc = 'List of modules to import under the debug'
             ..type = 'List<String>'
             ..classInit = '[]',
+            member('custom_imports')..type = 'bool'..classInit = 'false',
           ],
           class_('enum_value')
           ..doc = 'An entry in an enum'
@@ -490,6 +491,9 @@ It only makes sense to use either `ctor` or `ctor_defaulted` and if using
             member('is_reference')
             ..doc = '''If true this data is reference data held on by the instance.
 It will be passed to ctor and stored as immutable'''
+            ..type = 'bool'
+            ..classInit = 'false',
+            member('is_static')
             ..type = 'bool'
             ..classInit = 'false'
           ]

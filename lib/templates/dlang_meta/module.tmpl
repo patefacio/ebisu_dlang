@@ -12,6 +12,9 @@ ${d_meta.importStatement(i)};
 #< for(String i in _.debugImports) { >
 debug ${d_meta.importStatement(i)};
 #< } >
+#< if (_.customImports) { >
+${chomp(customBlock("custom imports ${_.name}"))}
+#< } >
 #< if (_.anyImports) { >
 
 #< } >
@@ -19,5 +22,8 @@ ${chomp(_.contents)}
 #< if(_.unitTest) { >
 static if(1) unittest { 
 ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
+}
+version(unittest) {
+  import specd.specd;
 }
 #< } >

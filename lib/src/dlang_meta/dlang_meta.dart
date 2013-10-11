@@ -266,6 +266,7 @@ class Module extends Decls {
   List<String> publicImports = [];
   /// List of modules to import under the debug
   List<String> debugImports = [];
+  bool customImports = false;
 
 // custom <class Module>
 
@@ -963,6 +964,7 @@ class Member {
   /// If true this data is reference data held on by the instance.
   /// It will be passed to ctor and stored as immutable
   bool isReference = false;
+  bool isStatic = false;
 
 // custom <class Member>
 
@@ -996,7 +998,8 @@ class Member {
   }
 
   String get decl {
-    String result = '';
+    String result = isStatic? 'static ' : '';
+
     if(null != doc) {
       result += (blockComment(doc) + '\n');
     }

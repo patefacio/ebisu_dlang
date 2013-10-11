@@ -31,6 +31,11 @@ ${d_meta.importStatement(i)};
 debug ${d_meta.importStatement(i)};
 ''');
  } 
+ if (_.customImports) { 
+  _buf.add('''
+${chomp(customBlock("custom imports ${_.name}"))}
+''');
+ } 
  if (_.anyImports) { 
   _buf.add('''
 
@@ -43,6 +48,9 @@ ${chomp(_.contents)}
   _buf.add('''
 static if(1) unittest { 
 ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
+}
+version(unittest) {
+  import specd.specd;
 }
 ''');
  } 
