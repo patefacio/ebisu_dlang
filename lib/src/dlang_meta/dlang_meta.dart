@@ -195,6 +195,7 @@ class System {
   void generate() {
     finalize();
     packages.forEach((pkg) => pkg.generate());
+    apps.forEach((app) => app.generate());
   }
 
   dynamic get root => this;
@@ -220,12 +221,25 @@ class Package {
   String get name => _name;
   /// List of modules in the package
   List<Module> modules = [];
+  /// List of test modules dedicated to this package
+  List<Module> testModules = [];
   /// List of packages in the package
   List<Package> packages = [];
 
 // custom <class Package>
 
   void _finalize(dynamic parent) {
+    testModules
+      .addAll(
+        modules
+        .where((module) => module._testModule != null)
+        .map((module) => module._testModule));
+
+    if(testModules.length > 0) {
+      _testPackage = package('tests')
+        ..modules = testModules;
+      _testPackage._finalize(this);
+    }
     if(modules != null) modules.forEach((module) => module._finalize(this)); 
     if(packages != null) packages.forEach((pkg) => pkg._finalize(this)); 
     _parent = parent;
@@ -238,6 +252,8 @@ class Package {
       modules.forEach((module) => module.generate());
     if(null != packages)
       packages.forEach((pkg) => pkg.generate());
+    if(null != _testPackage)
+      _testPackage.generate();
   }
 
   dynamic get root => _parent.root;
@@ -247,6 +263,8 @@ class Package {
   final Id _id;
   dynamic _parent;
   String _name;
+  /// Package to contain test modules
+  Package _testPackage;
 }
 
 /// Meta data required for D module
@@ -267,33 +285,26 @@ class Module extends Decls {
   /// List of modules to import under the debug
   List<String> debugImports = [];
   bool customImports = false;
+  bool get requiresUtinit => _requiresUtinit;
 
 // custom <class Module>
 
   String get name => _id.snake;
 
-  bool get anyImports => (imports.length + publicImports.length + debugImports.length) > 0;
+  bool get anyImports => (imports.length + 
+      publicImports.length + debugImports.length) > 0;
 
   void _finalize(Package parent) {
     finalizeDecls(this);
     _parent = parent;
 
-    List<String> orderImports(List<String> listImports) {
-      listImports = 
-        new Set.from(listImports.map((i) => 
-                standardImports.contains(i)?            
-                "std.${i}" : i)).toList();
-
-      listImports.sort();
-      // Put std imports at end
-      listImports = listImports.where((i) => !i.contains('std.')).toList()
-        ..addAll(listImports.where((i) => i.contains('std.')));
-      return listImports;
-    }
-
     imports = orderImports(imports);
     publicImports = orderImports(publicImports);
     debugImports = orderImports(debugImports);
+    _requiresUtinit =     
+      imports.any((i) => i.contains("opmix.ut")) ||
+      publicImports.any((i) => i.contains("opmix.ut")) ||
+      debugImports.any((i) => i.contains("opmix.ut"));
   }
 
   String get contents => decls();
@@ -312,9 +323,16 @@ class Module extends Decls {
     path.split(path.relative(pkgPath, from:root.pkgPath)).join('.');
   String get qualifiedName => "${rootRelativePath}.$name";
 
+  Module get testModule => 
+    (_testModule == null)? 
+    _testModule = module('test_'+_id.snake) : 
+    _testModule;
+
 // end <class Module>
   final Id _id;
   dynamic _parent;
+  bool _requiresUtinit;
+  Module _testModule;
 }
 
 /// An entry in an enum
@@ -488,11 +506,121 @@ class Union extends Decls {
   String _name;
 }
 
-/// TODO: add support for apps
-class App {
+class Option {
+
+  Option(this._id);
+
+  /// Id for this option
+  Id get id => _id;
+  /// Documentation for this option
+  String doc;
+  bool isFlag = false;
+  bool isRequired = false;
+  bool isMultiple = false;
+  dynamic defaultsTo;
+  String type;
+  String abbrev;
+
+  // custom <class Option>
+
+  String getOpt(String varName) {
+    if(abbrev.length > 0) {
+      return '"${id.emacs}|$abbrev", &$varName.${id.camel}';
+    } else {
+      return '"${id.emacs}", &$varName.${id.camel}';
+    }
+  }
+
+  // end <class Option>
+  final Id _id;
+}
+
+/// An app or script
+class App extends Decls {
+
+  App(this._id);
+
+  /// Id for this option
+  Id get id => _id;
+  /// Documentation for this option
+  String doc;
+  /// Reference to parent of this option
+  dynamic get parent => _parent;
+  List<Option> options = [];
+  /// List of modules to import
+  List<String> imports = [];
+  /// List of modules to import publicly
+  List<String> publicImports = [];
+  /// List of modules to import under the debug
+  List<String> debugImports = [];
 
   // custom <class App>
+
+  String get name => _id.snake;
+
+  String get contents => decls();
+
+  void _finalize(dynamic parent) {
+    imports.add('getopt');
+    imports = orderImports(imports);
+    publicImports = orderImports(publicImports);
+    debugImports = orderImports(debugImports);
+    if(options.length > 0) {
+      print("Adding struct");
+      var optStruct = struct('options');
+      options.forEach((opt) {
+        var m = new Member(opt.id);
+        if(opt.defaultsTo != null) {
+          m.type = 'auto';
+          m.init = opt.defaultsTo;
+        }
+        if(opt.type != null) {
+            m.type = opt.type;
+        }
+        optStruct.members.add(m);
+      });
+      structs.add(optStruct);
+    }
+    finalizeDecls(this);
+    _parent = parent;
+  }
+
+  String optionsInit() {
+    if(options.length == 0) return '';
+    return indentBlock('''
+Options options;
+getopt(args, 
+${
+options.map((o) => 
+'  ${o.getOpt("options")}').join(',\n')});
+''');
+  }
+  
+  generate() {
+    String targetPath = 
+      (_parent.rootPath == null)? './${_id.snake}.d' : 
+      "${_parent.rootPath}/apps/${_id.snake}.d";
+    mergeWithFile('''
+#!/usr/bin/rdmd
+
+${joinIncludeEnd(([]
+   ..addAll(publicImports.map((i) => 'public ${importStatement(i)}'))
+   ..addAll(imports.map((i) => '${importStatement(i)}'))
+   ..addAll(debugImports.map((i) => 'debug ${importStatement(i)}')))
+   .toList())}
+${contents}
+void main(string[] args) {
+
+${optionsInit()}${indentBlock(chomp(customBlock("main $id")))}
+
+}
+
+''', targetPath);
+  }
+
   // end <class App>
+  final Id _id;
+  dynamic _parent;
 }
 
 /// Declaration for an alias
@@ -741,7 +869,10 @@ class Decls {
     String privateCustomBlock = 
       (privateSection)? "\n${customBlock('${runtimeType.toString().toLowerCase()} private $name')}\n" : '';
 
-    List<String> result = [ meta.decls(this.filter(DAccess.PUBLIC)), publicCustomBlock ];
+    List<String> result = [ 
+      meta.decls(this.filter(DAccess.PUBLIC)), 
+      publicCustomBlock 
+    ];
     Decls d = this.filter(DAccess.EXPORT);
     if(!d.empty()) {
       result.add('''
@@ -827,7 +958,7 @@ class Ctor {
 
 // custom <class Ctor>
 
-  String define() {
+  String define([includeCustomBlock = false]) {
     List<String> parts = [];
     List<String> assignments = [];
     members.forEach((m) {
@@ -851,11 +982,14 @@ class Ctor {
 
       assignments.add("this.${m.vName} = ${rhs}");
     });
-    
+
+    var cb = includeCustomBlock?
+      '\n${customBlock("${name} ctor")}' : '';
+
     return '''
 //! ${name} member initializing ctor
 this(${parts.join(',\n     ')}) {
-  ${assignments.join(';\n  ')};
+  ${assignments.join(';\n  ')};$cb
 }''';
   }
 
@@ -879,11 +1013,15 @@ class Struct extends Decls {
   DAccess dAccess = DAccess.PUBLIC;
   /// Constructor for this struct
   Ctor ctor;
+  /// If true include custom block
+  bool ctorCustomBlock = false;
   /// List of template parms for this struct.
   /// Existance of any _tParms_ implies this struct is a template struct.
   List<TemplateParm> templateParms = [];
   /// List of members of this class
   List<Member> members = [];
+  /// If true include unit test just after struct definition
+  bool namedUnitTest = false;
 
 // custom <class Struct>
 
@@ -912,9 +1050,7 @@ class Struct extends Decls {
   
   String get templateName => "${name}${templateDecl}";
 
-  String define() {
-    return meta.struct(this);
-  }
+  String define() => meta.struct(this);
 
 // end <class Struct>
   final Id _id;
@@ -990,7 +1126,7 @@ class Member {
     }
     if(isReference) {
       usage = Access.RO;
-      if(passType == null) passType = PassType.I;
+      if(passType == null) passType = PassType.C;
     }
     if(null == type) {
       type = _id.capCamel;
@@ -1003,7 +1139,7 @@ class Member {
     if(null != doc) {
       result += (blockComment(doc) + '\n');
     }
-    var t = isReference? 'immutable($type)' : type;
+    var t = isReference? 'const($type)' : type;
     if(null != init) {
       result += '${t} ${_vName} = ${init}';
     } else {
@@ -1026,6 +1162,8 @@ Package package(String _id) => new Package(id(_id));
 Module module(String _id) => new Module(id(_id));
 Struct struct(String _id) => new Struct(id(_id));
 Member member(String _id) => new Member(id(_id));
+App app(String _id) => new App(id(_id));
+Option option(String _id) => new Option(id(_id));
 Alias alias(String _id) => new Alias(id(_id));
 Alias aliasThis(String text) => new Alias(id('this'))..aliased = text;
 ArrAlias arrAlias(String _id) => new ArrAlias(id(_id));
@@ -1040,7 +1178,8 @@ TemplateParm tparm(String _id) => new TemplateParm(id(_id));
 CodeBlock codeBlock(String code) => new CodeBlock(code);
 
 var aArr = aArrAlias;
-Alias arr(String type, { bool mutable : false, String of }) {
+Alias arr(String type, { bool immutable : false, 
+  bool const_ : false, String of }) {
   String aliasedType;
 
   if(of != null) {
@@ -1049,9 +1188,9 @@ Alias arr(String type, { bool mutable : false, String of }) {
     aliasedType = id(type).capCamel;
   }
 
-  String aliased = mutable? 
-    "${aliasedType}[]" :
-    "immutable(${aliasedType})[]";    
+  String aliased = const_? 
+    "const(${aliasedType})[]" : (immutable ?
+        "immutable(${aliasedType})[]" : "${aliasedType}[]");    
   Alias result = (alias("${type}_arr")..aliased = aliased);
   return result;
 }
@@ -1095,6 +1234,19 @@ var C = PassType.C;
 var RO = Access.RO;
 var RW = Access.RW;
 var IA = Access.IA;
+
+List<String> orderImports(List<String> listImports) {
+  listImports = 
+    new Set.from(listImports.map((i) => 
+            standardImports.contains(i)?            
+            "std.${i}" : i)).toList();
+
+  listImports.sort();
+  // Put std imports at end
+  listImports = listImports.where((i) => !i.contains('std.')).toList()
+    ..addAll(listImports.where((i) => i.contains('std.')));
+  return listImports;
+}
 
 // end <part dlang_meta>
 
