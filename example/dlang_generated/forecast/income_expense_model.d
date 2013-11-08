@@ -7,18 +7,19 @@ debug import std.stdio;
 /**
    Differentiate between income and expense items
 */
-enum IncomeExpenseType { 
+enum IncomeExpenseType {
   Income,
   Expense
 }
-struct ModeledItemSpec { 
+
+struct ModeledItemSpec {
   mixin ReadOnly!_label;
   mixin ReadOnly!_type;
   mixin ReadOnly!_growthRate;
   /**
      Slices of modeled item spec - See blah-bahdee-blah
   */
-  alias immutable(ModeledItemSpec)[] ModeledItemSpecArr;
+  alias ModeledItemSpec[] ModeledItemSpecArr;
   private {
     /**
        Describes item
@@ -31,7 +32,11 @@ struct ModeledItemSpec {
     double _growthRate = 3.0;
   }
 }
-static if(1) unittest { 
+
+unittest {
   // custom <unittest income_expense_model>
   // end <unittest income_expense_model>
+}
+version(unittest) {
+  import specd.specd;
 }
