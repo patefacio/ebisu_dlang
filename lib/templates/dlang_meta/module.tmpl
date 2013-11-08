@@ -12,6 +12,9 @@ ${d_meta.importStatement(i)};
 #< for(String i in _.debugImports) { >
 debug ${d_meta.importStatement(i)};
 #< } >
+#< if (_.requiresUtinit) { >
+mixin UTInit!__MODULE__;
+#< } >
 #< if (_.customImports) { >
 ${chomp(customBlock("custom imports ${_.name}"))}
 #< } >
@@ -20,10 +23,14 @@ ${chomp(customBlock("custom imports ${_.name}"))}
 #< } >
 ${chomp(_.contents)}
 #< if(_.unitTest) { >
-static if(1) unittest { 
+#<   if(_.requiresUtinit) { >
+@UT("${_.name}") unittest {
+#<   } else { >
+unittest {
+#<   } >
 ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
 }
+#< } >
 version(unittest) {
   import specd.specd;
 }
-#< } >

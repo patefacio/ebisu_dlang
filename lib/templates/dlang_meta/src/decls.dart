@@ -24,17 +24,17 @@ ${alias.decl};
  } 
  for(var e in _.enums) { 
   _buf.add('''
-${chomp(e.define())}
+${e.define()}
 ''');
  } 
  for(var struct in _.structs) { 
   _buf.add('''
-${chomp(struct.define(), true)}
+${struct.define()}
 ''');
  } 
  for(var union in _.unions) { 
   _buf.add('''
-${chomp(union.define())}
+${union.define()}
 ''');
  } 
  for(var t in _.templates) { 

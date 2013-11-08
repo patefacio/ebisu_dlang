@@ -31,6 +31,11 @@ ${d_meta.importStatement(i)};
 debug ${d_meta.importStatement(i)};
 ''');
  } 
+ if (_.requiresUtinit) { 
+  _buf.add('''
+mixin UTInit!__MODULE__;
+''');
+ } 
  if (_.customImports) { 
   _buf.add('''
 ${chomp(customBlock("custom imports ${_.name}"))}
@@ -45,14 +50,24 @@ ${chomp(customBlock("custom imports ${_.name}"))}
 ${chomp(_.contents)}
 ''');
  if(_.unitTest) { 
+   if(_.requiresUtinit) { 
   _buf.add('''
-static if(1) unittest { 
+@UT("${_.name}") unittest {
+''');
+   } else { 
+  _buf.add('''
+unittest {
+''');
+   } 
+  _buf.add('''
 ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
 }
+''');
+ } 
+  _buf.add('''
 version(unittest) {
   import specd.specd;
 }
 ''');
- } 
   return _buf.join();
 }
