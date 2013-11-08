@@ -8,7 +8,7 @@ String union([dynamic _]) {
 
 
   _buf.add('''
-union ${_.name} { 
+union ${_.name} {
 ''');
  for(var member in _.members) { 
   _buf.add('''

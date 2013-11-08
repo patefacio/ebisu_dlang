@@ -13,19 +13,19 @@ ${blockComment(_.doc)}
 ''');
  } 
   _buf.add('''
-struct ${_.templateName} { 
+struct ${_.templateName} {
 ''');
  if(null != _.ctor) { 
   _buf.add('''
-${indentBlock(_.ctor.define())}
+${indentBlock(_.ctor.define(_.ctorCustomBlock))}
 ''');
  } 
   _buf.add('''
-${indentBlock(chomp(_.decls()))}
+${chomp(indentBlock(_.decls()))}
 ''');
  if(_.unitTest) { 
   _buf.add('''
-  static if(1) unittest { 
+  unittest {
 ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
   }
 ''');
@@ -33,5 +33,13 @@ ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
   _buf.add('''
 }
 ''');
+ if(_.namedUnitTest && !_.unitTest) { 
+  _buf.add('''
+
+@UT("${_.name}") unittest {
+${indentBlock(chomp(customBlock("unittest ${_.name}")))}
+}
+''');
+ } 
   return _buf.join();
 }

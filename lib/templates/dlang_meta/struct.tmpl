@@ -1,14 +1,20 @@
 #< if(null != _.doc) { >
 ${blockComment(_.doc)}
 #< } >
-struct ${_.templateName} { 
+struct ${_.templateName} {
 #< if(null != _.ctor) { >
-${indentBlock(_.ctor.define())}
+${indentBlock(_.ctor.define(_.ctorCustomBlock))}
 #< } >
-${indentBlock(chomp(_.decls()))}
+${chomp(indentBlock(_.decls()))}
 #< if(_.unitTest) { >
-  static if(1) unittest { 
+  unittest {
 ${indentBlock(chomp(customBlock("unittest ${_.name}")))}
   }
 #< } >
 }
+#< if(_.namedUnitTest && !_.unitTest) { >
+
+@UT("${_.name}") unittest {
+${indentBlock(chomp(customBlock("unittest ${_.name}")))}
+}
+#< } >
