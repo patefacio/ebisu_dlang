@@ -8,13 +8,13 @@ ${chomp(constant.define())}
 ${alias.decl};
 #< } >
 #< for(var e in _.enums) { >
-${chomp(e.define())}
+${e.define()}
 #< } >
 #< for(var struct in _.structs) { >
-${chomp(struct.define(), true)}
+${struct.define()}
 #< } >
 #< for(var union in _.unions) { >
-${chomp(union.define())}
+${union.define()}
 #< } >
 #< for(var t in _.templates) { >
 template(${t.id})
