@@ -8,10 +8,10 @@ import "package:ebisu/ebisu_dart_meta.dart";
 String _topDir;
 
 void main() {
-  Options options = new Options();
-  String here = path.absolute(options.script);
-  bool noCompile = options.arguments.contains('--no_compile');
-  bool compileOnly = options.arguments.contains('--compile_only');
+  var arguments = Platform.executableArguments;
+  String here = path.absolute(Platform.script.path);
+  bool noCompile = arguments.contains('--no_compile');
+  bool compileOnly = arguments.contains('--compile_only');
   _topDir = path.dirname(path.dirname(here));
   String templateFolderPath = 
     path.join(_topDir, 'lib', 'templates', 'dlang_meta');
@@ -31,8 +31,8 @@ void main() {
         // Files were updated, since Dart does not have eval, call again to same
         // script using updated templates
         print("$filesUpdated files updated...rerunning");
-        List<String> args = [ options.script, '--no_compile' ]
-          ..addAll(options.arguments);
+        List<String> args = [ Platform.script, '--no_compile' ]
+          ..addAll(arguments);
         Process.run('dart', args).then((ProcessResult results) {
           print(results.stdout);
           print(results.stderr);
@@ -233,6 +233,14 @@ Plus it will provide a key to use the language as developer sees fit. This key i
             ..doc = 'List of modules in the package'
             ..type = 'List<Module>'
             ..classInit = '[]',
+            member('test_modules')
+            ..doc = 'List of test modules dedicated to this package'
+            ..type = 'List<Module>'
+            ..classInit = '[]',
+            member('test_package')
+            ..doc = 'Package to contain test modules'
+            ..access = IA
+            ..type = 'Package',
             member('packages')
             ..doc = 'List of packages in the package'
             ..type = 'List<Package>'
@@ -258,6 +266,10 @@ Plus it will provide a key to use the language as developer sees fit. This key i
             ..type = 'List<String>'
             ..classInit = '[]',
             member('custom_imports')..type = 'bool'..classInit = 'false',
+            member('requires_utinit')..type = 'bool'..access = RO,
+            member('test_module')
+            ..access = IA
+            ..type = 'Module',
           ],
           class_('enum_value')
           ..doc = 'An entry in an enum'
@@ -309,18 +321,54 @@ Plus it will provide a key to use the language as developer sees fit. This key i
           class_('union')
           ..extend = 'Decls'
           ..members = [
-            id_member('union'),
-            doc_member('union'),
-            parent_member('union'),
-            name_member('union'),
-            d_access_member('D struct'),
-            member('members')
-            ..doc = 'List of members of this class'
-            ..type = 'List<Member>'
-            ..classInit = '[]',
+          id_member('union'),
+          doc_member('union'),
+          parent_member('union'),
+          name_member('union'),
+          d_access_member('D struct'),
+          member('members')
+          ..doc = 'List of members of this class'
+          ..type = 'List<Member>'
+          ..classInit = '[]',
+          ],
+          class_('option')
+          ..members = [
+          id_member('option'),
+          doc_member('option'),
+          member('is_flag')
+          ..classInit = false,
+          member('is_required')
+          ..classInit = false,
+          member('is_multiple')
+          ..classInit = false,
+          member('defaults_to')
+          ..type = 'dynamic',
+          member('type'),
+          member('abbrev')
           ],
           class_('app')
-          ..doc = 'TODO: add support for apps',
+          ..extend = 'Decls'
+          ..doc = 'An app or script'
+          ..members = [
+          id_member('option'),
+          doc_member('option'),
+          parent_member('option'), 
+          member('options')
+          ..type = 'List<Option>'
+          ..classInit = '[]',
+          member('imports')
+          ..doc = 'List of modules to import'
+          ..type = 'List<String>'
+          ..classInit = '[]',
+          member('public_imports')
+          ..doc = 'List of modules to import publicly'
+          ..type = 'List<String>'
+          ..classInit = '[]',
+          member('debug_imports')
+          ..doc = 'List of modules to import under the debug'
+          ..type = 'List<String>'
+          ..classInit = '[]',
+          ],
           class_('alias')
           ..doc = 'Declaration for an alias'
           ..members = [
@@ -435,6 +483,9 @@ item extending Decls (e.g. Module, Union, Template, Struct)'''
             member('ctor')
             ..doc = 'Constructor for this struct'
             ..type = 'Ctor',
+            member('ctor_custom_block')
+            ..doc = 'If true include custom block'
+            ..classInit = false,
             member('template_parms')
             ..doc = '''
 List of template parms for this struct.
@@ -446,6 +497,9 @@ Existance of any _tParms_ implies this struct is a template struct.
             ..doc = 'List of members of this class'
             ..type = 'List<Member>'
             ..classInit = '[]',
+            member('named_unit_test')
+            ..doc = 'If true include unit test just after struct definition'
+            ..classInit = false,
           ],
           class_('member')
           ..doc = 'Meta data required for D member'
