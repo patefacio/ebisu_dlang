@@ -116,7 +116,7 @@ main() {
 
   group('test module sections', () {
     genTest('has no public/private section by default', (){}, 
-        dontWant:['public', 'private', 'unittest']);
+        dontWant:['public', 'private',]);
     genTest('has public and private when asked',
         () { _testModule..publicSection = true..privateSection = true; },
         codeEquivalentText : '''
@@ -127,6 +127,9 @@ private {
 // custom <module private test_module>
 // end <module private test_module>
 }
+version(unittest) {
+  import specd.specd;
+}
 '''
             );
 
@@ -134,7 +137,7 @@ private {
         () =>  _testModule..unitTest = true,
         codeEquivalentText : '''
 module test_package.test_module;
-static if(1) unittest { 
+unittest { 
   // custom <unittest test_module>
   // end <unittest test_module>
 }
@@ -173,10 +176,13 @@ enum Color {
   Blue = 42
 }
 
+version(unittest) {
+  import specd.specd;
+}
 '''));
 
   group('test struct members', () {
-    genTest('members typed correctly',
+    genTest('typed correctly',
         () => _testModule..structs = [
           struct('s')
           ..members = [
@@ -195,6 +201,10 @@ struct S {
   float f;
   string s;
 }
+
+version(unittest) {
+  import specd.specd;
+}
 '''
             );
   });
@@ -205,9 +215,9 @@ struct S {
           struct('s')
           ..aliases = [
             alias('foo')..aliased = 'Moo',
-            arr('i'),
-            arr('j', mutable:true),
-            arr('donkey', mutable:true, of:'Dog'),
+            arr('i', immutable:true),
+            arr('j', immutable:false),
+            arr('donkey', of:'Dog'),
             aArr('goo', 'string', 'double'),
           ]
         ],
@@ -219,6 +229,10 @@ struct S {
   alias J[] JArr;
   alias Dog[] DonkeyArr;
   alias double[string] GooMap;
+}
+
+version(unittest) {
+  import specd.specd;
 }
 '''
             );

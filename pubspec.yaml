@@ -1,11 +1,11 @@
 name: ebisu_dlang
-version: 0.0.3
+version: 0.0.4
 author: Daniel Davidson <dbdavidson@yahoo.com>
 homepage: https://github.com/patefacio/ebisu_dlang
 description: >
   A library that supports code generation of the D Programming Language
 dependencies:
-  ebisu: ">=0.0.3"
+  ebisu: ">=0.0.4"
 
   logging: ">=0.7.1"
 
@@ -14,7 +14,7 @@ dependencies:
 # end <ebisu_dlang dependencies>
 
 dev_dependencies:
-  hop: ">=0.24.4"
+  hop: ">=0.27.0"
 
 # custom <ebisu_dlang dev dependencies>
 # end <ebisu_dlang dev dependencies>
