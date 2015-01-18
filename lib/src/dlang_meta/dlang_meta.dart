@@ -1,7 +1,7 @@
-part of dlang_meta;
+part of ebisu_dlang.dlang_meta;
 
 /// Access for member variable - ia - inaccessible, ro - read/only, rw read/write
-class Access {
+class Access implements Comparable<Access> {
   static const IA = const Access._(0);
   static const RO = const Access._(1);
   static const RW = const Access._(2);
@@ -14,7 +14,13 @@ class Access {
 
   final int value;
 
+  int get hashCode => value;
+
   const Access._(this.value);
+
+  copy() => this;
+
+  int compareTo(Access other) => value.compareTo(other.value);
 
   String toString() {
     switch(this) {
@@ -25,18 +31,19 @@ class Access {
   }
 
   static Access fromString(String s) {
+    if(s == null) return null;
     switch(s) {
       case "Ia": return IA;
       case "Ro": return RO;
       case "Rw": return RW;
+      default: return null;
     }
   }
-
 
 }
 
 /// Pass const(T), or immutable(T) - if null then just T
-class PassType {
+class PassType implements Comparable<PassType> {
   static const C = const PassType._(0);
   static const I = const PassType._(1);
 
@@ -47,7 +54,13 @@ class PassType {
 
   final int value;
 
+  int get hashCode => value;
+
   const PassType._(this.value);
+
+  copy() => this;
+
+  int compareTo(PassType other) => value.compareTo(other.value);
 
   String toString() {
     switch(this) {
@@ -57,17 +70,18 @@ class PassType {
   }
 
   static PassType fromString(String s) {
+    if(s == null) return null;
     switch(s) {
       case "C": return C;
       case "I": return I;
+      default: return null;
     }
   }
-
 
 }
 
 /// Access in the D sense
-class DAccess {
+class DAccess implements Comparable<DAccess> {
   static const PUBLIC = const DAccess._(0);
   static const PRIVATE = const DAccess._(1);
   static const PACKAGE = const DAccess._(2);
@@ -84,7 +98,13 @@ class DAccess {
 
   final int value;
 
+  int get hashCode => value;
+
   const DAccess._(this.value);
+
+  copy() => this;
+
+  int compareTo(DAccess other) => value.compareTo(other.value);
 
   String toString() {
     switch(this) {
@@ -97,20 +117,21 @@ class DAccess {
   }
 
   static DAccess fromString(String s) {
+    if(s == null) return null;
     switch(s) {
       case "Public": return PUBLIC;
       case "Private": return PRIVATE;
       case "Package": return PACKAGE;
       case "Protected": return PROTECTED;
       case "Export": return EXPORT;
+      default: return null;
     }
   }
-
 
 }
 
 /// User defined data type
-class Udt {
+class Udt implements Comparable<Udt> {
   static const ALIAS = const Udt._(0);
   static const ENUM = const Udt._(1);
   static const STRUCT = const Udt._(2);
@@ -125,7 +146,13 @@ class Udt {
 
   final int value;
 
+  int get hashCode => value;
+
   const Udt._(this.value);
+
+  copy() => this;
+
+  int compareTo(Udt other) => value.compareTo(other.value);
 
   String toString() {
     switch(this) {
@@ -137,14 +164,15 @@ class Udt {
   }
 
   static Udt fromString(String s) {
+    if(s == null) return null;
     switch(s) {
       case "Alias": return ALIAS;
       case "Enum": return ENUM;
       case "Struct": return STRUCT;
       case "Union": return UNION;
+      default: return null;
     }
   }
-
 
 }
 
@@ -186,8 +214,8 @@ class System {
 
   void finalize() {
     if(!_finalized) {
-      if(packages != null) packages.forEach((pkg) => pkg._finalize(this)); 
-      if(apps != null) apps.forEach((app) => app._finalize(this)); 
+      if(packages != null) packages.forEach((pkg) => pkg._finalize(this));
+      if(apps != null) apps.forEach((app) => app._finalize(this));
       _finalized = true;
     }
   }
@@ -240,13 +268,13 @@ class Package {
         ..modules = testModules;
       _testPackage._finalize(this);
     }
-    if(modules != null) modules.forEach((module) => module._finalize(this)); 
-    if(packages != null) packages.forEach((pkg) => pkg._finalize(this)); 
+    if(modules != null) modules.forEach((module) => module._finalize(this));
+    if(packages != null) packages.forEach((pkg) => pkg._finalize(this));
     _parent = parent;
   }
 
   void generate() {
-    if(_parent == null) 
+    if(_parent == null)
       throw new StateError("Finalize the system before generating Package ${_id}");
     if(null != modules)
       modules.forEach((module) => module.generate());
@@ -291,7 +319,7 @@ class Module extends Decls {
 
   String get name => _id.snake;
 
-  bool get anyImports => (imports.length + 
+  bool get anyImports => (imports.length +
       publicImports.length + debugImports.length) > 0;
 
   void _finalize(Package parent) {
@@ -301,7 +329,7 @@ class Module extends Decls {
     imports = orderImports(imports);
     publicImports = orderImports(publicImports);
     debugImports = orderImports(debugImports);
-    _requiresUtinit =     
+    _requiresUtinit =
       imports.any((i) => i.contains("opmix.ut")) ||
       publicImports.any((i) => i.contains("opmix.ut")) ||
       debugImports.any((i) => i.contains("opmix.ut"));
@@ -310,7 +338,7 @@ class Module extends Decls {
   String get contents => decls();
 
   void generate() {
-    if(_parent == null) 
+    if(_parent == null)
       throw new StateError("Finalize the system before generating Module ${_id}");
 
     String targetFile = "${pkgPath}/${_id.snake}.d";
@@ -319,13 +347,13 @@ class Module extends Decls {
 
   dynamic get root => _parent.root;
   String get pkgPath => "${_parent.pkgPath}";
-  String get rootRelativePath => 
+  String get rootRelativePath =>
     path.split(path.relative(pkgPath, from:root.pkgPath)).join('.');
   String get qualifiedName => "${rootRelativePath}.$name";
 
-  Module get testModule => 
-    (_testModule == null)? 
-    _testModule = module('test_'+_id.snake) : 
+  Module get testModule =>
+    (_testModule == null)?
+    _testModule = module('test_'+_id.snake) :
     _testModule;
 
 // end <class Module>
@@ -384,8 +412,8 @@ class TMixin {
 
 // custom <class TMixin>
 
-  String get argsDecl => 
-    tArgs.length>1 ? "!(${tArgs.join(',')})" : 
+  String get argsDecl =>
+    tArgs.length>1 ? "!(${tArgs.join(',')})" :
     (tArgs.length==1 ? "!${tArgs[0]}" : '');
 
   String get decl => 'mixin ${name}${argsDecl}';
@@ -456,7 +484,7 @@ class Constant {
   void _finalize(dynamic parent) {
     _name = _id.capCamel;
     _parent = parent;
-    if(null != init) 
+    if(null != init)
       init = init.toString();
   }
 
@@ -589,16 +617,16 @@ class App extends Decls {
     if(options.length == 0) return '';
     return indentBlock('''
 Options options;
-getopt(args, 
+getopt(args,
 ${
-options.map((o) => 
+options.map((o) =>
 '  ${o.getOpt("options")}').join(',\n')});
 ''');
   }
-  
+
   generate() {
-    String targetPath = 
-      (_parent.rootPath == null)? './${_id.snake}.d' : 
+    String targetPath =
+      (_parent.rootPath == null)? './${_id.snake}.d' :
       "${_parent.rootPath}/apps/${_id.snake}.d";
     mergeWithFile('''
 #!/usr/bin/rdmd
@@ -793,7 +821,7 @@ class Template extends Decls {
   void _finalize(dynamic parent) {
     templateParms.forEach((tp) => tp._finalize(this));
     _parent = parent;
-  }  
+  }
 
 // end <class Template>
   final Id _id;
@@ -833,7 +861,7 @@ class Decls {
 
 // custom <class Decls>
 
-  String get name => 
+  String get name =>
     throw new UnimplementedError(
       "name getter must be implemented for ${runtimeType}");
 
@@ -864,14 +892,14 @@ class Decls {
   }
 
   String decls() {
-    String publicCustomBlock = 
+    String publicCustomBlock =
       (publicSection)? "\n${customBlock('${runtimeType.toString().toLowerCase()} public $name')}\n" : '';
-    String privateCustomBlock = 
+    String privateCustomBlock =
       (privateSection)? "\n${customBlock('${runtimeType.toString().toLowerCase()} private $name')}\n" : '';
 
-    List<String> result = [ 
-      meta.decls(this.filter(DAccess.PUBLIC)), 
-      publicCustomBlock 
+    List<String> result = [
+      meta.decls(this.filter(DAccess.PUBLIC)),
+      publicCustomBlock
     ];
     Decls d = this.filter(DAccess.EXPORT);
     if(!d.empty()) {
@@ -962,7 +990,7 @@ class Ctor {
     List<String> parts = [];
     List<String> assignments = [];
     members.forEach((m) {
-      String passType = 
+      String passType =
         (m.passType == null)? m.type :
         ((m.passType == PassType.C) ? 'const(${m.type})' :
             'immutable(${m.type})');
@@ -976,7 +1004,7 @@ class Ctor {
         }
       }
       parts.add(part);
-      String rhs = m.castDup? 
+      String rhs = m.castDup?
         "(cast(${m.type})${m.name}).dup" :
         (m.gDup? "${m.name}.gdup" : m.name);
 
@@ -1047,7 +1075,7 @@ class Struct extends Decls {
     }
     return '';
   }
-  
+
   String get templateName => "${name}${templateDecl}";
 
   String define() => meta.struct(this);
@@ -1167,18 +1195,18 @@ Option option(String _id) => new Option(id(_id));
 Alias alias(String _id) => new Alias(id(_id));
 Alias aliasThis(String text) => new Alias(id('this'))..aliased = text;
 ArrAlias arrAlias(String _id) => new ArrAlias(id(_id));
-AArrAlias aArrAlias(String _id, String key, String value) => 
+AArrAlias aArrAlias(String _id, String key, String value) =>
   new AArrAlias(id(_id))..key = key..value = value;
 Constant constant(String _id) => new Constant(id(_id));
 Union union(String _id) => new Union(id(_id));
 Enum enum_(String _id) => new Enum(id(_id));
-EnumValue ev(String _id) => new EnumValue(id(_id));
+EnumValue ev(id) => new EnumValue(id);
 TMixin tmixin(String mixinName) => new TMixin(mixinName);
 TemplateParm tparm(String _id) => new TemplateParm(id(_id));
 CodeBlock codeBlock(String code) => new CodeBlock(code);
 
 var aArr = aArrAlias;
-Alias arr(String type, { bool immutable : false, 
+Alias arr(String type, { bool immutable : false,
   bool const_ : false, String of }) {
   String aliasedType;
 
@@ -1188,9 +1216,9 @@ Alias arr(String type, { bool immutable : false,
     aliasedType = id(type).capCamel;
   }
 
-  String aliased = const_? 
+  String aliased = const_?
     "const(${aliasedType})[]" : (immutable ?
-        "immutable(${aliasedType})[]" : "${aliasedType}[]");    
+        "immutable(${aliasedType})[]" : "${aliasedType}[]");
   Alias result = (alias("${type}_arr")..aliased = aliased);
   return result;
 }
@@ -1236,9 +1264,9 @@ var RW = Access.RW;
 var IA = Access.IA;
 
 List<String> orderImports(List<String> listImports) {
-  listImports = 
-    new Set.from(listImports.map((i) => 
-            standardImports.contains(i)?            
+  listImports =
+    new Set.from(listImports.map((i) =>
+            standardImports.contains(i)?
             "std.${i}" : i)).toList();
 
   listImports.sort();
@@ -1249,4 +1277,3 @@ List<String> orderImports(List<String> listImports) {
 }
 
 // end <part dlang_meta>
-
